@@ -1,0 +1,62 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Active Group API",
+        "description": "REST API for the Active Group website and admin dashboard.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "API server"
+        }
+    ],
+    "paths": {
+        "/api/v1/health": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "summary": "API health check",
+                "operationId": "08446b2131153d4d904a591df15d8495",
+                "responses": {
+                    "200": {
+                        "description": "API is up",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ok"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "example": "v1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "Token",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "System",
+            "description": "System"
+        }
+    ]
+}
