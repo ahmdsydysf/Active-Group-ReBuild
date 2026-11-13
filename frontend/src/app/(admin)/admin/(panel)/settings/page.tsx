@@ -5,6 +5,7 @@ import { CheckIcon } from "@/components/admin/icons";
 import { useShell } from "@/components/admin/Shell";
 import TextField, { type Field } from "@/components/admin/TextField";
 import { api, ApiError, fieldErrors } from "@/lib/admin/api";
+import Repeater, { type Item } from "@/components/admin/Repeater";
 import type { Settings, StatInput } from "@/lib/admin/types";
 
 /** Arabic and English side by side: `name` expands to `${name}_ar` and `${name}_en`. */
@@ -43,6 +44,14 @@ const TABS: { id: string; label: string; fields: Pair[] }[] = [
       { name: "instagram", label: "إنستجرام", type: "url", ltr: true, max: 500 },
     ],
   },
+  {
+    id: "about",
+    label: "من نحن",
+    fields: [
+      { name: "about_title", label: "عنوان القصة", pair: true, max: 120 },
+      { name: "about_body", label: "قصة الشركة", type: "textarea", rows: 8, pair: true, max: 3000, hint: "سطر فاضي بين كل فقرة والتانية." },
+    ],
+  },
   { id: "numbers", label: "الأرقام", fields: [] },
   {
     id: "seo",
@@ -52,6 +61,14 @@ const TABS: { id: string; label: string; fields: Pair[] }[] = [
       { name: "seo_description", label: "الوصف", type: "textarea", pair: true, max: 170, hint: "بيظهر تحت اسم الموقع في نتايج جوجل. أقل من 170 حرف." },
     ],
   },
+];
+
+const TIMELINE_COLS = [
+  { key: "year", label: "السنة" },
+  { key: "title_ar", label: "العنوان" },
+  { key: "title_en", label: "Title" },
+  { key: "text_ar", label: "التفاصيل", wide: true, textarea: true },
+  { key: "text_en", label: "Details", wide: true, textarea: true },
 ];
 
 const EMPTY_STAT: StatInput = { value: "", suffix: "", label_ar: "", label_en: "" };
@@ -93,7 +110,7 @@ export default function SettingsPage() {
       const errs = fieldErrors(e);
       setErrors(errs);
       const first = Object.keys(errs)[0]?.replace(/_(ar|en)$/, "").replace(/\..*/, "");
-      const where = TABS.find((t) => t.fields.some((f) => f.name === first)) ?? (first === "stats" ? TABS[3] : null);
+      const where = TABS.find((t) => t.fields.some((f) => f.name === first) || t.id === { stats: "numbers", timeline: "about" }[first ?? ""]);
       if (where) setTab(where.id);
       toast(e instanceof ApiError && e.status === 422 ? "فيه حقول محتاجة تتصلّح" : e instanceof ApiError ? e.message : "حصلت مشكلة.");
     } finally {
@@ -169,7 +186,23 @@ export default function SettingsPage() {
                   ))}
                 </>
               ) : (
-                t.fields.map(field)
+                <>
+                  {t.fields.map(field)}
+                  {t.id === "about" && (
+                    <fieldset className="mt-2">
+                      <legend className="font-display font-bold mb-1">رحلتنا</legend>
+                      <p className="hint-t !mt-0 mb-3">المحطات اللي بتظهر في الخط الزمني بصفحة من نحن، لحد 12 محطة.</p>
+                      <Repeater
+                        cols={TIMELINE_COLS}
+                        rows={(values.timeline ?? []).map((x) => ({ ...x, year: String(x.year ?? "") }) as Item)}
+                        onChange={(rows) => setValues((s) => s && { ...s, timeline: rows as unknown as Settings["timeline"] })}
+                        addLabel="إضافة محطة"
+                        max={12}
+                        error={Object.entries(errors).find(([k]) => k.startsWith("timeline"))?.[1]}
+                      />
+                    </fieldset>
+                  )}
+                </>
               )}
             </div>
           ))}

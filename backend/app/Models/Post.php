@@ -36,6 +36,16 @@ class Post extends Model
         'image', 'seo_description_ar', 'seo_description_en', 'is_active', 'is_featured', 'published_at',
     ];
 
+    protected static function booted(): void
+    {
+        // Publishing without a date (from the form or a bulk action) means "now".
+        static::saving(function (self $post): void {
+            if ($post->is_active && ! $post->published_at) {
+                $post->published_at = now();
+            }
+        });
+    }
+
     protected function casts(): array
     {
         return ['is_active' => 'boolean', 'is_featured' => 'boolean', 'published_at' => 'datetime'];

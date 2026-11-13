@@ -24,7 +24,7 @@ final class PasswordController extends Controller
     )]
     public function forgot(Request $request): JsonResponse
     {
-        $email = $request->validate(['email' => 'required|email|max:120'])['email'];
+        $email = mb_strtolower($request->validate(['email' => 'required|email|max:120'])['email']);
 
         if (User::query()->where('email', $email)->where('is_active', true)->exists()) {
             try {
@@ -57,6 +57,7 @@ final class PasswordController extends Controller
             'password' => ['required', 'confirmed', 'max:200', PasswordRule::min(10)->letters()->numbers()],
         ]);
 
+        $data['email'] = mb_strtolower($data['email']);
         $status = Password::broker()->reset($data, function (User $user, string $password): void {
             $user->forceFill(['password' => $password, 'remember_token' => Str::random(60)])->save();
             $user->tokens()->delete();

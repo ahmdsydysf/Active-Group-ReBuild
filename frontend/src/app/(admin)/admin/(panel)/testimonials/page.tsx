@@ -1,20 +1,9 @@
 "use client";
 
 import ContentManager from "@/components/admin/ContentManager";
+import { ColorPicker, PALETTE } from "@/components/admin/cards";
+import { initial } from "@/lib/voices";
 import type { Testimonial } from "@/lib/admin/types";
-
-/** Card colours the site knows (Testimonial::COLORS on the API). */
-const COLORS: Record<string, [string, string]> = {
-  field: ["var(--field)", "أخضر"],
-  deep: ["var(--deep)", "أخضر غامق"],
-  sky: ["var(--sky)", "أزرق"],
-  rust: ["var(--rust)", "طوبي"],
-  plum: ["#7A2140", "نبيتي"],
-  wheat: ["var(--wheat)", "برتقالي"],
-  bloom: ["var(--bloom)", "وردي"],
-};
-
-const initial = (name: string) => Array.from(name.replace(/^(م|أ|د|الحاج)\.?\s+/u, ""))[0];
 
 export default function TestimonialsPage() {
   return (
@@ -31,22 +20,9 @@ export default function TestimonialsPage() {
         { name: "name", label: "الاسم", labelEn: "Name", required: true, max: 120 },
         { name: "role", label: "الصفة", labelEn: "Role", max: 160 },
       ]}
-      extra={(v, set) => (
-        <fieldset className="fld">
-          <legend className="block font-semibold text-sm mb-2">لون الكارت</legend>
-          <div className="flex flex-wrap gap-2">
-            {Object.entries(COLORS).map(([key, [color, label]]) => (
-              <label key={key} className="swatch" style={{ "--c": color } as React.CSSProperties}>
-                <input type="radio" name="color" value={key} checked={v.color === key} onChange={() => set("color", key)} className="sr-only" />
-                <span aria-hidden="true" />
-                {label}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      )}
+      extra={(v, set) => <ColorPicker legend="لون الكارت" colors={PALETTE} value={v.color} onChange={(c) => set("color", c)} />}
       card={(t, c) => {
-        const color = COLORS[t.color]?.[0] ?? COLORS.field[0];
+        const color = PALETTE[t.color]?.[0] ?? PALETTE.field[0];
         return (
           <div key={t.id} className="tile flex flex-col gap-3" style={{ borderTop: `6px solid ${color}` }} {...c.drag}>
             <p className="font-display font-semibold text-[17px] leading-relaxed">«{t.quote_ar}»</p>

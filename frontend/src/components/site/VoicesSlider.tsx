@@ -2,12 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Testimonial } from "@/lib/types";
+import { initial, VOICE_COLORS } from "@/lib/voices";
 import { ChevronLeft, ChevronRight } from "./icons";
-
-export const VOICE_COLORS: Record<string, string> = { field: "var(--field)", rust: "var(--rust)", sky: "var(--sky)", plum: "#7A2140", deep: "var(--deep)", wheat: "var(--wheat)", bloom: "var(--bloom)" };
-
-/** First letter of a name without its title (م. / Eng. / الحاج …), for the round avatar. */
-export const initial = (name: string) => Array.from(name.replace(/^(م|أ|د|Eng|Mr|Mrs|Dr|Hajj|الحاج)\.?\s+/u, ""))[0];
 
 /** Scrolling testimonials with arrows, arrow keys and dots that follow the scroll position. */
 export default function VoicesSlider({ items, rtl, heading, labels }: { items: Testimonial[]; rtl: boolean; heading: React.ReactNode; labels: { prev: string; next: string; region: string } }) {

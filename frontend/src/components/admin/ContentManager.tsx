@@ -24,6 +24,16 @@ type Controls = {
 
 type Props<T extends Row> = {
   resource: string;
+  /** Extra list query, e.g. "section=advice". */
+  query?: string;
+  /** Second section on a page: smaller heading. */
+  sub?: boolean;
+  /** Drag to reorder (off for lists ordered by date). */
+  sortable?: boolean;
+  /** Buttons next to "add", given a reload function. */
+  toolbar?: (reload: () => void) => ReactNode;
+  /** Called after a save or delete, for pages that show related data. */
+  onChange?: () => void;
   title: string;
   intro: string;
   noun: string;
@@ -62,11 +72,11 @@ export default function ContentManager<T extends Row>(p: Props<T>) {
   const [orderBefore, setOrderBefore] = useState("");
 
   const load = useCallback(() => {
-    api<{ data: T[] }>(`/${p.resource}`).then(
+    api<{ data: T[] }>(`/${p.resource}${p.query ? `?${p.query}` : ""}`).then(
       (r) => setItems(r.data),
       (e: unknown) => setLoadError(e instanceof ApiError ? e.message : "حصلت مشكلة."),
     );
-  }, [p.resource]);
+  }, [p.resource, p.query]);
   useEffect(load, [load]);
 
   const keys = [...p.fields.flatMap((f) => [`${f.name}_ar`, `${f.name}_en`]), ...(p.shared ?? []).map((f) => f.name), ...Object.keys(p.defaults ?? {})];
@@ -110,6 +120,7 @@ export default function ContentManager<T extends Row>(p: Props<T>) {
       const { data } = await api<{ data: T }>(isNew ? `/${p.resource}` : `/${p.resource}/${editing.id}`, "POST", body);
       setItems((list) => (isNew ? [...(list ?? []), data] : (list ?? []).map((x) => (x.id === data.id ? data : x))));
       setEditing(null);
+      p.onChange?.();
       toast(isNew ? `اتضاف ${p.noun}` : "تم الحفظ");
     } catch (e) {
       setErrors(fieldErrors(e));
@@ -135,6 +146,7 @@ export default function ContentManager<T extends Row>(p: Props<T>) {
     try {
       await api(`/${p.resource}/${item.id}`, "DELETE");
       setItems((l) => l?.filter((x) => x.id !== item.id) ?? null);
+      p.onChange?.();
       toast("تم الحذف");
     } catch (e) {
       toast(e instanceof ApiError ? e.message : "حصلت مشكلة.");
@@ -165,7 +177,7 @@ export default function ContentManager<T extends Row>(p: Props<T>) {
     });
 
   const controls = (item: T, index: number): Controls => ({
-    drag: {
+    drag: p.sortable === false ? { draggable: false } : {
       draggable: true,
       onDragStart: (e: DragEvent) => {
         setDragId(item.id);
@@ -184,7 +196,7 @@ export default function ContentManager<T extends Row>(p: Props<T>) {
         persistOrder(items!);
       },
     },
-    grip: (
+    grip: p.sortable === false ? null : (
       <button
         type="button"
         className="grip"
@@ -225,15 +237,18 @@ export default function ContentManager<T extends Row>(p: Props<T>) {
 
   return (
     <>
-      <div className="dhead">
+      <div className={`dhead${p.sub ? " mt-10" : ""}`}>
         <div>
-          <h1>{p.title}</h1>
+          {p.sub ? <h2 className="text-2xl font-extrabold">{p.title}</h2> : <h1>{p.title}</h1>}
           <p>{p.intro}</p>
         </div>
-        <button className="dbtn pri" type="button" onClick={() => open("new")}>
-          <PlusIcon />
-          {p.addLabel}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {p.toolbar?.(load)}
+          <button className="dbtn pri" type="button" onClick={() => open("new")}>
+            <PlusIcon />
+            {p.addLabel}
+          </button>
+        </div>
       </div>
 
       {loadError ? (

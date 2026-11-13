@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, Suspense, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { api, LOGIN_PATH, session } from "@/lib/admin/api";
+import { api, CHANGED, LOGIN_PATH, session } from "@/lib/admin/api";
 import type { AdminUser } from "@/lib/admin/types";
-import { BurstIcon, GlobeIcon, LogoutIcon, MenuIcon, MoonIcon, SearchIcon, SunIcon } from "./icons";
+import { BellIcon, BurstIcon, GlobeIcon, LogoutIcon, MenuIcon, MoonIcon, SearchIcon, SunIcon } from "./icons";
 import { ACTIONS, NAV } from "./nav";
 import Palette from "./Palette";
+import PublishButton from "./PublishButton";
 
 type Ctx = { user: AdminUser; toast: (message: string) => void };
 const ShellContext = createContext<Ctx | null>(null);
@@ -41,11 +42,22 @@ export default function Shell({ children }: { children: ReactNode }) {
   const [palette, setPalette] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [fresh, setFresh] = useState(0);
 
   useEffect(() => {
     if (!session.token()) return router.replace(LOGIN_PATH);
     api<{ data: AdminUser }>("/me").then((r) => setUser(r.data), () => {});
   }, [router]);
+
+  const refreshBadges = useCallback(() => {
+    api<{ counts: { new: number } }>("/messages?box=new&per_page=1").then((r) => setFresh(r.counts.new), () => {});
+  }, []);
+  // Badges follow the page: each navigation re-checks new messages and pending changes.
+  useEffect(refreshBadges, [refreshBadges, path]);
+  useEffect(() => {
+    addEventListener(CHANGED, refreshBadges);
+    return () => removeEventListener(CHANGED, refreshBadges);
+  }, [refreshBadges]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -93,7 +105,7 @@ export default function Shell({ children }: { children: ReactNode }) {
             {/* eslint-disable-next-line @next/next/no-img-element -- static export serves images as-is */}
             <img src="/img/logo.webp" alt="أكتيف جروب" height={40} />
           </Link>
-          {NAV.map((n) => {
+          {NAV.filter((n) => !("admin" in n) || user.role === "admin").map((n) => {
             const on = trim(n.href) === path;
             return (
               <div key={n.href} className="contents">
@@ -101,6 +113,7 @@ export default function Shell({ children }: { children: ReactNode }) {
                 <Link href={n.href} onClick={() => setMenu(false)} className={on ? "on" : ""} style={{ "--c": n.color } as React.CSSProperties} aria-current={on ? "page" : undefined}>
                   <span className="ic"><n.Icon /></span>
                   {n.label}
+                  {"badge" in n && fresh > 0 && <span className="n">{fresh}</span>}
                 </Link>
               </div>
             );
@@ -121,12 +134,17 @@ export default function Shell({ children }: { children: ReactNode }) {
               ابحث أو نفّذ أمر…<kbd>Ctrl K</kbd>
             </button>
             <div className="sp" />
+            <PublishButton path={path} toast={toast} />
             <a className="iconbtn" href="/ar/" target="_blank" rel="noopener" aria-label="عرض الموقع" title="عرض الموقع">
               <GlobeIcon />
             </a>
             <button className="iconbtn" type="button" aria-label="تبديل الوضع الليلي" aria-pressed={dark} onClick={toggleDark}>
               {dark ? <SunIcon /> : <MoonIcon />}
             </button>
+            <Link className="iconbtn" href="/admin/messages/" aria-label={fresh ? `الرسائل، ${fresh} جديدة` : "الرسائل"}>
+              <BellIcon className="w-5" />
+              {fresh > 0 && <span className="badge">{fresh > 9 ? "9+" : fresh}</span>}
+            </Link>
             <div className="me">
               <i aria-hidden="true">{Array.from(user.name)[0]}</i>
               <div>
@@ -139,7 +157,7 @@ export default function Shell({ children }: { children: ReactNode }) {
         </main>
 
         <div className="menu-ov" onClick={() => setMenu(false)} />
-        <Palette open={palette} onClose={() => setPalette(false)} items={[...ACTIONS, ...NAV.slice(1)]} />
+        <Palette open={palette} onClose={() => setPalette(false)} items={[...ACTIONS, ...NAV.slice(1).filter((n) => !("admin" in n) || user.role === "admin")]} />
         <div className={`toast${toastMsg ? " show" : ""}`} role="status">
           <BurstIcon />
           <span>{toastMsg}</span>

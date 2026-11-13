@@ -16,9 +16,20 @@ export type Partner = Row & {
 };
 
 export type Overview = {
-  sections: { key: "slides" | "testimonials" | "partners"; total: number; missing_en: number }[];
-  subscribers: { total: number; this_month: number };
+  sections: { key: string; total: number; missing_en: number }[];
+  kpis: {
+    messages_new: number; quotes_new: number; products: number; products_this_month: number;
+    subscribers: number; subscribers_this_month: number; posts: number; last_post_at: string | null;
+  };
+  messages_by_month: number[];
+  latest_messages: import("./messages").Message[];
+  products_by_category: { name: string; color: string; count: number }[];
+  latest_products: {
+    id: number; name_ar: string; name_en: string | null; image_url: string | null; category: string | null; color: string | null;
+    packs_ar: string | null; type: string | null; factory: string | null; is_active: boolean;
+  }[];
 };
 
 export type StatInput = { value: number | string; suffix: string | null; label_ar: string; label_en: string | null };
-export type Settings = { stats: StatInput[]; [key: string]: string | null | StatInput[] };
+export type TimelineItem = { year: number | string; title_ar: string; title_en: string | null; text_ar: string | null; text_en: string | null };
+export type Settings = { stats: StatInput[]; timeline: TimelineItem[]; [key: string]: string | null | StatInput[] | TimelineItem[] };

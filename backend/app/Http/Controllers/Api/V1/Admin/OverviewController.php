@@ -78,7 +78,7 @@ final class OverviewController extends Controller
             'latest_products' => Product::query()->with(['type.category', 'factory'])->latest('updated_at')->limit(5)->get()
                 ->map(fn (Product $p) => [
                     'id' => $p->id, 'name_ar' => $p->name_ar, 'name_en' => $p->name_en, 'image_url' => $p->imageUrl('image', true),
-                    'category' => $p->type?->category?->name_ar, 'type' => $p->type?->name_ar, 'factory' => $p->factory?->name_ar, 'is_active' => $p->is_active,
+                    'category' => $p->type?->category?->name_ar, 'color' => $p->type?->category?->color, 'packs_ar' => $p->packs_ar, 'type' => $p->type?->name_ar, 'factory' => $p->factory?->name_ar, 'is_active' => $p->is_active,
                 ]),
         ]);
     }

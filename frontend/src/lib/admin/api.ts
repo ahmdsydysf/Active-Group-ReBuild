@@ -7,6 +7,8 @@
 const BASE = `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/admin`;
 const KEY = "ag-token";
 export const LOGIN_PATH = "/admin/login/";
+/** Window event fired after every successful write. */
+export const CHANGED = "ag:changed";
 
 const stores = () => {
   try {
@@ -60,12 +62,24 @@ export async function api<T = unknown>(path: string, method = "GET", body?: Body
   }
   if (!res.ok) {
     const message =
-      res.status === 429 ? "محاولات كتير ورا بعض. استنى دقيقة وجرب تاني." : res.status >= 500 ? "حصلت مشكلة في السيرفر. جرب تاني بعد شوية." : (json.message ?? "حصلت مشكلة.");
+      res.status === 429 ? "محاولات كتير ورا بعض. استنى دقيقة وجرب تاني." : res.status === 500 || (res.status > 500 && !json.message) ? "حصلت مشكلة في السيرفر. جرب تاني بعد شوية." : (json.message ?? "حصلت مشكلة.");
     throw new ApiError(res.status, message, json.errors);
   }
+  // Any successful write may leave the public site behind: the shell re-checks the publish status.
+  if (method !== "GET" && !path.startsWith("/log")) dispatchEvent(new Event(CHANGED));
   return json as T;
 }
 
 /** First validation message per field, for showing under inputs. */
 export const fieldErrors = (e: unknown): Record<string, string> =>
   e instanceof ApiError ? Object.fromEntries(Object.entries(e.errors).map(([k, v]) => [k, v[0]])) : {};
+
+/** Downloads a file the API streams (CSV exports), sending the token the browser can't add to a plain link. */
+export async function download(path: string, filename: string) {
+  const res = await fetch(BASE + path, { headers: { Authorization: `Bearer ${session.token() ?? ""}` } });
+  if (!res.ok) throw new ApiError(res.status, "مقدرناش نجهز الملف. جرب تاني.");
+  const url = URL.createObjectURL(await res.blob());
+  const a = Object.assign(document.createElement("a"), { href: url, download: filename });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}

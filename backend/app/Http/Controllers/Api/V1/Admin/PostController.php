@@ -69,17 +69,6 @@ final class PostController extends ContentController
         };
     }
 
-    protected function save(Model $record, Request $request): void
-    {
-        parent::save($record, $request);
-
-        // Publishing without a date means "now".
-        /** @var Post $record */
-        if ($record->is_active && ! $record->published_at) {
-            $record->update(['published_at' => now()]);
-        }
-    }
-
     protected function present(Model $record): array
     {
         /** @var Post $record */

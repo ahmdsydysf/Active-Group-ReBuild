@@ -2,7 +2,12 @@ import type { Overview } from "@/lib/admin/types";
 
 const LABELS: Record<string, [string, string]> = {
   slides: ["السلايدر", "#E0607E"],
+  products: ["المنتجات", "#F2C230"],
+  advice: ["النصائح", "#2E8FB0"],
+  blog: ["المدونة", "#D08A2A"],
+  gallery: ["المعرض", "#B4442E"],
   partners: ["الشركاء", "#F2C230"],
+  team: ["الفريق", "#E0607E"],
   testimonials: ["آراء العملاء", "#D08A2A"],
 };
 const BUDS = ["#F2C230", "#2E8FB0"];
@@ -15,7 +20,7 @@ const items = (n: number) => `${n} ${n === 1 ? "عنصر" : n === 2 ? "عنصر�
  */
 export default function ContentGarden({ sections }: { sections: Overview["sections"] }) {
   return (
-    <section className="tile span12">
+    <section className="tile span7">
       <h3>حديقة المحتوى</h3>
       <div className="garden">
         {sections.map((s, i) => {
@@ -54,8 +59,8 @@ export default function ContentGarden({ sections }: { sections: Overview["sectio
         {sections.map((s) => <span key={s.key}>{LABELS[s.key]?.[0] ?? s.key}</span>)}
       </div>
       <div className="legend">
-        <span><i style={{ background: "var(--bloom)" }} />زهرة متفتحة = القسم مترجم بالكامل</span>
-        <span><i style={{ background: "var(--leaf)" }} />برعم = فيه محتوى ناقصه ترجمة</span>
+        <span><i style={{ background: "var(--bloom)" }} />زهرة متفتحة: القسم مترجم بالكامل</span>
+        <span><i style={{ background: "var(--leaf)" }} />برعم: فيه محتوى ناقصه ترجمة</span>
         <span>طول النبتة = عدد العناصر</span>
       </div>
     </section>

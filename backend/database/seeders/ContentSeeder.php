@@ -342,8 +342,10 @@ HTML;
             ['jobs', 'كريم محمود', '01045678901', 'القاهرة', 'أرسلت السيرة الذاتية لوظيفة مهندس مبيعات', 1600],
         ];
 
-        foreach ($rows as [$type, $name, $phone, $gov, $body, $minutes]) {
-            $m = Message::query()->create(['type' => $type, 'name' => $name, 'phone' => $phone, 'governorate' => $gov, 'body' => $body, 'locale' => 'ar', 'status' => 'new']);
+        foreach ($rows as $i => [$type, $name, $phone, $gov, $body, $minutes]) {
+            // Every other sample has an email, so both reply paths (email and WhatsApp) show up.
+            $email = $i % 2 ? null : 'customer'.($i + 1).'@example.com';
+            $m = Message::query()->create(['type' => $type, 'name' => $name, 'phone' => $phone, 'email' => $email, 'governorate' => $gov, 'body' => $body, 'locale' => 'ar', 'status' => 'new']);
             $m->forceFill(['created_at' => now()->subMinutes($minutes)])->save();
         }
 

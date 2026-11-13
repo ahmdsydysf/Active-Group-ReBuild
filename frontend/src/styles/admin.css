@@ -187,8 +187,8 @@
 .chk { width: 18px; height: 18px; accent-color: var(--field); }
 .dpager { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; color: var(--d-mute); font-size: 14px; flex-wrap: wrap; }
 .dpager div { display: flex; gap: 6px; }
-.dpager a { min-width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; border: 1px solid var(--d-line); background: var(--d-panel); color: var(--d-ink); padding: 0 10px; }
-.dpager a[aria-current="page"] { background: var(--field); color: #fff; border-color: var(--field); }
+.dpager :is(a, button) { min-width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; border: 1px solid var(--d-line); background: var(--d-panel); color: var(--d-ink); padding: 0 10px; }
+.dpager :is(a, button)[aria-current="page"] { background: var(--field); color: #fff; border-color: var(--field); }
 .form-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
 .fsec { margin-bottom: 16px; }
 .fsec h2 { font-size: 16px; margin-bottom: 4px; }
@@ -198,7 +198,7 @@
 .rte-bar button:hover { background: var(--d-panel); }
 .rte { border: 1px solid var(--d-line); border-radius: 0 0 12px 12px; padding: 16px; min-height: 260px; background: var(--d-panel); line-height: 1.9; }
 .rte:focus { outline: none; border-color: var(--leaf); }
-.repeat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 40px; gap: 8px; align-items: center; margin-bottom: 8px; }
+.repeat-row { display: grid; grid-template-columns: var(--cols, repeat(3, minmax(0, 1fr)) 40px); gap: 8px; align-items: center; margin-bottom: 8px; }
 .sortable > * { cursor: grab; }
 .sortable .dragging { opacity: .45; }
 .grip { color: var(--d-mute); display: grid; place-items: center; }
@@ -251,7 +251,7 @@
 }
 @media (max-width: 560px) {
   .repeat-row { grid-template-columns: minmax(0, 1fr) 40px; }
-  .repeat-row > :nth-child(2), .repeat-row > :nth-child(3) { grid-column: 1; }
+  .repeat-row > :not(:last-child) { grid-column: 1; }
   .repeat-row > :last-child { grid-row: 1; grid-column: 2; }
 }
 .fld label > input, .fld label > textarea, .fld label > select { font-weight: 400; font-size: 15px; display: block; }
@@ -277,3 +277,12 @@
 .stat-row legend { font-family: var(--display); font-weight: 700; font-size: 14px; padding: 0 6px; }
 @media (max-width: 720px) { .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 }
+.dpager button:disabled { opacity: .45; cursor: default; }
+.rte h2 { font-size: 20px; font-weight: 800; margin: 14px 0 6px; }
+.rte h3 { font-size: 17px; font-weight: 700; margin: 12px 0 4px; }
+.rte ul { list-style: disc; padding-inline-start: 22px; }
+.rte ol { list-style: decimal; padding-inline-start: 22px; }
+.rte blockquote { border-inline-start: 4px solid var(--leaf); padding-inline-start: 12px; color: var(--d-mute); }
+.rte a { color: var(--field); text-decoration: underline; }
+.rte-bar button[aria-pressed="true"] { background: var(--d-panel); }
+.dtop .dsearch { min-width: 0; white-space: nowrap; overflow: hidden; }

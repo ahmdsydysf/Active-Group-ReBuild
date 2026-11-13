@@ -1,0 +1,64 @@
+# Builds the static site from the live API and uploads it to the hosting over FTP.
+# Runs when the dashboard's "نشر التعديلات" button calls it (workflow_dispatch),
+# when frontend code changes on main, and every day at 03:00 Cairo time so scheduled posts appear.
+#
+# Repository settings needed (Settings > Secrets and variables > Actions):
+#   variables: API_URL (e.g. https://api.activegroup-eg.com), SITE_URL (e.g. https://activegroup-eg.com)
+#   secrets:   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, and optionally FTP_DIR (default public_html/)
+name: Publish site
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [frontend/**, .github/workflows/publish.yml]
+  schedule:
+    - cron: "0 1 * * *"
+
+# One publish at a time; a newer request replaces one still waiting.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Build static site
+        run: npm run build
+        env:
+          API_URL: ${{ vars.API_URL }}
+          NEXT_PUBLIC_API_URL: ${{ vars.API_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Upload over FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: frontend/out/
+          server-dir: ${{ secrets.FTP_DIR || 'public_html/' }}
+          # Only changed files are sent; the sync state file keeps track between runs.
+          exclude: |
+            **/.git*
+            **/.git*/**

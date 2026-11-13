@@ -93,7 +93,6 @@ export const DownloadIcon = line(<path d="M12 3v12M7 10l5 5 5-5M4 19h16" />);
 export const FactoryIcon = line(<path d="M3 21V10l6 4V10l6 4V5h6v16z" />);
 export const CheckIcon = line(<path d="m5 12 5 5 9-10" />, "2.2");
 export const SearchIcon = line(<><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>);
-export const LinkIcon = line(<><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></>);
 /** Chevron toward the visual left or right, independent of reading direction. */
 export const ChevronLeft = line(<path d="m15 6-6 6 6 6" />, "2");
 export const ChevronRight = line(<path d="m9 6 6 6-6 6" />, "2");

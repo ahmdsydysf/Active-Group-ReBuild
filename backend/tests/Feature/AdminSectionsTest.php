@@ -66,6 +66,11 @@ class AdminSectionsTest extends TestCase
         $this->putJson("/api/v1/admin/posts/{$id}", ['is_active' => true, 'published_at' => now()->addWeek()->toDateTimeString()])
             ->assertJsonPath('data.status', 'scheduled');
         $this->getJson('/api/v1/admin/posts?section=blog&status=scheduled')->assertJsonPath('meta.total', 1);
+
+        // A draft published from the bulk bar gets a date too.
+        $draft = Post::query()->create(['section' => 'blog', 'title_ar' => 'مسودة', 'image' => 'posts/x.webp', 'is_active' => false]);
+        $this->postJson('/api/v1/admin/posts/bulk', ['ids' => [$draft->id], 'action' => 'publish'])->assertNoContent();
+        $this->assertNotNull($draft->refresh()->published_at);
     }
 
     public function test_bulk_actions_and_content_changes_mark_the_site_for_publishing(): void
@@ -95,12 +100,14 @@ class AdminSectionsTest extends TestCase
 
     public function test_opening_a_message_marks_it_read_and_reply_needs_an_email(): void
     {
-        $message = Message::query()->first();
+        $message = Message::query()->whereNull('email')->first();
+        $withEmail = Message::query()->whereNotNull('email')->first();
 
         $this->getJson('/api/v1/admin/messages')->assertJsonPath('counts.new', 5);
         $this->getJson("/api/v1/admin/messages/{$message->id}")->assertJsonPath('data.status', 'read');
         $this->getJson('/api/v1/admin/messages')->assertJsonPath('counts.new', 4);
         $this->postJson("/api/v1/admin/messages/{$message->id}/reply", ['body' => 'أهلا'])->assertUnprocessable();
+        $this->postJson("/api/v1/admin/messages/{$withEmail->id}/reply", ['body' => 'أهلا'])->assertOk()->assertJsonPath('data.reply', 'أهلا');
 
         $this->putJson("/api/v1/admin/messages/{$message->id}", ['status' => 'archived'])->assertOk();
         $this->getJson('/api/v1/admin/messages?box=archived')->assertJsonPath('meta.total', 1);

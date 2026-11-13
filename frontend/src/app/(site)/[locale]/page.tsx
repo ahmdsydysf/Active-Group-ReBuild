@@ -12,6 +12,7 @@ import { whatsappHref } from "@/lib/contact";
 import { href, isLocale, type Locale, messages } from "@/lib/i18n";
 import { formatNumber } from "@/lib/format";
 import type { Category } from "@/lib/types";
+import { initial, VOICE_COLORS } from "@/lib/voices";
 
 // Category colour (set in the dashboard) -> card style and pack drawing from the design.
 // The home page shows the three main families; other colours (micronutrients) live on the products page.
@@ -23,7 +24,6 @@ const FAMILY: Record<string, [string, PackShape, "pesticide" | "fertilizer" | "r
 // Advice card colours, in display order.
 const ADVICE = [["#D9EBD1", "#123F1C"], ["#DCEEF5", "#0E3A4A"], ["var(--bloom)", "#fff"], ["var(--sun)", "var(--deep)"], ["#F7DCD4", "#5A1E12"]];
 // Testimonial card colours offered in the dashboard.
-const VOICE: Record<string, string> = { field: "var(--field)", rust: "var(--rust)", sky: "var(--sky)", plum: "#7A2140", deep: "var(--deep)", wheat: "var(--wheat)", bloom: "var(--bloom)" };
 // The marquee needs at least this many logos to fill a wide screen before it loops.
 const MARQUEE_MIN = 20;
 
@@ -218,10 +218,10 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               </div>
               <div className="stack">
                 {home.testimonials.map((v, i) => (
-                  <figure key={v.id} className="voice" style={{ "--i": i, background: VOICE[v.color] ?? VOICE.field, margin: 0 } as React.CSSProperties}>
+                  <figure key={v.id} className="voice" style={{ "--i": i, background: VOICE_COLORS[v.color] ?? VOICE_COLORS.field, margin: 0 } as React.CSSProperties}>
                     <p>{rtl ? `«${v.quote}»` : `“${v.quote}”`}</p>
                     <figcaption className="who">
-                      <i>{Array.from(v.name.replace(/^(م|أ|د|Eng|Mr|Mrs|Dr|Hajj|الحاج)\.?\s+/u, ""))[0]}</i>
+                      <i>{initial(v.name)}</i>
                       <div>
                         <b>{v.name}</b>
                         {v.role && <small>{v.role}</small>}

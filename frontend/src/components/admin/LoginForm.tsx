@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { api, ApiError, session } from "@/lib/admin/api";
@@ -41,10 +42,13 @@ export default function LoginForm() {
         <span>كلمة المرور</span>
         <input name="password" type="password" required autoComplete="current-password" dir="ltr" maxLength={200} aria-invalid={!!error || undefined} />
       </label>
-      <label className="flex items-center gap-2 text-[15px]">
-        <input name="remember" type="checkbox" className="w-[18px] h-[18px] accent-field" />
-        افتكرني على الجهاز ده
-      </label>
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <label className="flex items-center gap-2 text-[15px]">
+          <input name="remember" type="checkbox" className="w-[18px] h-[18px] accent-field" />
+          افتكرني على الجهاز ده
+        </label>
+        <Link className="text-sm text-field underline" href="/admin/forgot-password/">نسيت كلمة السر؟</Link>
+      </div>
       {error && <p className="ferr -mt-1" role="alert">{error}</p>}
       <button className="btn btn-wheat justify-center mt-2" type="submit" disabled={busy} aria-busy={busy}>
         {busy ? "بندخّلك…" : "تسجيل الدخول"}
