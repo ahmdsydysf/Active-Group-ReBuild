@@ -13,6 +13,6 @@ trait HasOrderingScopes
 
     public function scopeOrdered(Builder $query): Builder
     {
-        return $query->orderBy($this->qualifyColumn('sort_order'))->orderByDesc($this->qualifyColumn('id'));
+        return $query->orderBy($this->qualifyColumn('sort_order'))->orderBy($this->qualifyColumn('id'));
     }
 }

@@ -2,47 +2,34 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\BumpsContentVersion;
-use App\Models\Concerns\HasFiles;
+use App\Models\Concerns\HasImages;
 use App\Models\Concerns\HasOrderingScopes;
 use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 
 class Partner extends Model
 {
-    use HasTranslations, HasFiles, BumpsContentVersion, HasOrderingScopes;
+    use HasImages, HasOrderingScopes, HasTranslations;
 
-    /** Folder on the public disk where this model's uploads live. */
     public const UPLOAD_DIR = 'partners';
 
-    /** @var list<string> */
-    public array $translatable = ['name', 'description'];
+    public const IMAGES = ['logo'];
 
-    /** @var list<string> */
-    public array $fileFields = ['logo'];
-
-    /** @var list<string> */
-    public array $htmlFields = [];
-
-    protected $fillable = [
-        'name_ar',
-        'name_en',
-        'description_ar',
-        'description_en',
-        'logo',
-        'website',
-        'facebook',
-        'twitter',
-        'instagram',
-        'sort_order',
-        'is_active',
-    ];
+    protected $fillable = ['name_ar', 'name_en', 'field_ar', 'field_en', 'description_ar', 'description_en', 'logo', 'website', 'sort_order', 'is_active'];
 
     protected function casts(): array
     {
+        return ['is_active' => 'boolean', 'sort_order' => 'integer'];
+    }
+
+    public function toPublic(string $locale): array
+    {
         return [
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
+            'id' => $this->id,
+            'name' => $this->tr('name', $locale),
+            'field' => $this->tr('field', $locale),
+            'logo' => $this->imageUrl('logo', true),
+            'website' => $this->website,
         ];
     }
 }

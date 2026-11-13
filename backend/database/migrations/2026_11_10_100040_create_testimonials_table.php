@@ -10,17 +10,17 @@ return new class extends Migration
     {
         Schema::create('testimonials', function (Blueprint $table) {
             $table->id();
-            $table->string('name_ar')->nullable();
+            $table->string('name_ar');
             $table->string('name_en')->nullable();
-            $table->string('position_ar')->nullable();
-            $table->string('position_en')->nullable();
-            $table->text('content_ar')->nullable();
-            $table->text('content_en')->nullable();
-            $table->string('photo', 500)->nullable();
-            $table->date('given_at')->nullable();
-            $table->integer('sort_order')->default(0)->index();
-            $table->boolean('is_active')->default(true)->index();
+            $table->string('role_ar')->nullable();
+            $table->string('role_en')->nullable();
+            $table->text('quote_ar');
+            $table->text('quote_en')->nullable();
+            $table->string('color', 20)->default('field');
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->index(['is_active', 'sort_order']);
         });
     }
 

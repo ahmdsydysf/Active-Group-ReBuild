@@ -2,44 +2,37 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\BumpsContentVersion;
-use App\Models\Concerns\HasFiles;
+use App\Models\Concerns\HasImages;
 use App\Models\Concerns\HasOrderingScopes;
 use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 
+/** Home hero: the first active slide gives the headline; the first three images fill the photo collage. */
 class Slide extends Model
 {
-    use HasTranslations, HasFiles, BumpsContentVersion, HasOrderingScopes;
+    use HasImages, HasOrderingScopes, HasTranslations;
 
-    /** Folder on the public disk where this model's uploads live. */
     public const UPLOAD_DIR = 'slides';
 
-    /** @var list<string> */
-    public array $translatable = ['title', 'subtitle'];
+    public const IMAGES = ['image'];
 
-    /** @var list<string> */
-    public array $fileFields = ['image'];
-
-    /** @var list<string> */
-    public array $htmlFields = [];
-
-    protected $fillable = [
-        'title_ar',
-        'title_en',
-        'subtitle_ar',
-        'subtitle_en',
-        'image',
-        'link_url',
-        'sort_order',
-        'is_active',
-    ];
+    protected $fillable = ['title_ar', 'title_en', 'subtitle_ar', 'subtitle_en', 'button_ar', 'button_en', 'button_url', 'image', 'sort_order', 'is_active'];
 
     protected function casts(): array
     {
+        return ['is_active' => 'boolean', 'sort_order' => 'integer'];
+    }
+
+    public function toPublic(string $locale): array
+    {
         return [
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
+            'id' => $this->id,
+            'title' => $this->tr('title', $locale),
+            'subtitle' => $this->tr('subtitle', $locale),
+            'button' => $this->tr('button', $locale),
+            'button_url' => $this->button_url,
+            'image' => $this->imageUrl(),
+            'image_sm' => $this->imageUrl('image', true),
         ];
     }
 }

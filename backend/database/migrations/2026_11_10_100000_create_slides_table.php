@@ -10,15 +10,18 @@ return new class extends Migration
     {
         Schema::create('slides', function (Blueprint $table) {
             $table->id();
-            $table->string('title_ar')->nullable();
+            $table->string('title_ar');
             $table->string('title_en')->nullable();
-            $table->text('subtitle_ar')->nullable();
-            $table->text('subtitle_en')->nullable();
+            $table->string('subtitle_ar', 500)->nullable();
+            $table->string('subtitle_en', 500)->nullable();
+            $table->string('button_ar', 60)->nullable();
+            $table->string('button_en', 60)->nullable();
+            $table->string('button_url', 500)->nullable();
             $table->string('image', 500)->nullable();
-            $table->string('link_url', 500)->nullable();
-            $table->integer('sort_order')->default(0)->index();
-            $table->boolean('is_active')->default(true)->index();
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->index(['is_active', 'sort_order']);
         });
     }
 

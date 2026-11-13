@@ -10,16 +10,14 @@ return new class extends Migration
     {
         Schema::create('product_types', function (Blueprint $table) {
             $table->id();
-            $table->string('slug')->unique();
-            $table->foreignId('product_category_id')->constrained('product_categories')->cascadeOnDelete();
-            $table->string('name_ar')->nullable();
+            $table->foreignId('product_category_id')->constrained()->cascadeOnDelete();
+            $table->string('slug', 120)->unique();
+            $table->string('name_ar');
             $table->string('name_en')->nullable();
-            $table->text('description_ar')->nullable();
-            $table->text('description_en')->nullable();
-            $table->string('image', 500)->nullable();
-            $table->integer('sort_order')->default(0)->index();
-            $table->boolean('is_active')->default(true)->index();
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->index(['product_category_id', 'is_active', 'sort_order']);
         });
     }
 

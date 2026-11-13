@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Active Group API",
-        "description": "REST API for the Active Group website and admin dashboard.",
+        "description": "REST API for the Active Group website and its dashboard.",
         "version": "1.0.0"
     },
     "servers": [
@@ -12,6 +12,947 @@
         }
     ],
     "paths": {
+        "/api/v1/admin/login": {
+            "post": {
+                "tags": [
+                    "Admin · Auth"
+                ],
+                "summary": "Sign in and get a bearer token",
+                "operationId": "02d2894f743c006b2a0ce550fa19a903",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Signed in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/AdminUser"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "429": {
+                        "description": "Too many attempts"
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/logout": {
+            "post": {
+                "tags": [
+                    "Admin · Auth"
+                ],
+                "summary": "Revoke the current token",
+                "operationId": "8b1fd4fbeaedfd4a816a543ae2dbdbe9",
+                "responses": {
+                    "204": {
+                        "description": "Signed out"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/me": {
+            "get": {
+                "tags": [
+                    "Admin · Auth"
+                ],
+                "summary": "The signed-in user",
+                "operationId": "e953f5ba4d72abb3e92664977d6cef6a",
+                "responses": {
+                    "200": {
+                        "description": "User",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/AdminUser"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/overview": {
+            "get": {
+                "tags": [
+                    "Admin · Overview"
+                ],
+                "summary": "Dashboard home numbers",
+                "operationId": "1364bce8197c80d1a927be5ec5a762df",
+                "responses": {
+                    "200": {
+                        "description": "Overview",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sections": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "key": {
+                                                        "type": "string"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer"
+                                                    },
+                                                    "missing_en": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "subscribers": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "this_month": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/partners": {
+            "get": {
+                "tags": [
+                    "Admin · Partners"
+                ],
+                "summary": "List records in display order",
+                "operationId": "91110f4afa7232b3b0689880b9af84ac",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 200
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Records",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PartnerAdmin"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PageMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin · Partners"
+                ],
+                "summary": "Create a record (multipart when it carries an image)",
+                "operationId": "cc93683ac0d92912e0e16d0f7cb7e1eb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PartnerAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/PartnerAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/partners/{id}": {
+            "put": {
+                "tags": [
+                    "Admin · Partners"
+                ],
+                "summary": "Update a record. With files, send POST and _method=PUT",
+                "operationId": "43b4070da1b18fc7ae8ca9e8d66a2c12",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PartnerAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/PartnerAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin · Partners"
+                ],
+                "summary": "Delete a record and its images",
+                "operationId": "7d34c22d1dd90de7279cc34f01c4982a",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/partners/reorder": {
+            "post": {
+                "tags": [
+                    "Admin · Partners"
+                ],
+                "summary": "Save a new display order",
+                "operationId": "285abc4f7064f012808d7fcd2916c171",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Saved"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/settings": {
+            "get": {
+                "tags": [
+                    "Admin · Settings"
+                ],
+                "summary": "All site settings, both languages",
+                "operationId": "d7a5e6aede5c102af213a43766078ba8",
+                "responses": {
+                    "200": {
+                        "description": "Settings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SettingsAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin · Settings"
+                ],
+                "summary": "Update some or all settings",
+                "operationId": "62550e00814c36c7103be3b5f33756ec",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SettingsAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Saved settings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SettingsAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/slides": {
+            "get": {
+                "tags": [
+                    "Admin · Slides"
+                ],
+                "summary": "List records in display order",
+                "operationId": "fc9942705765ec8f73bf108b8678c16c",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 200
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Records",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SlideAdmin"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PageMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin · Slides"
+                ],
+                "summary": "Create a record (multipart when it carries an image)",
+                "operationId": "b05bf70aca19bbc31c752c5fc4cfdb22",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SlideAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SlideAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/slides/{id}": {
+            "put": {
+                "tags": [
+                    "Admin · Slides"
+                ],
+                "summary": "Update a record. With files, send POST and _method=PUT",
+                "operationId": "6e35f110af249b643013d41bc2f24eb8",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SlideAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SlideAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin · Slides"
+                ],
+                "summary": "Delete a record and its images",
+                "operationId": "dba0c102c6adf86a703c3c085dfbf571",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/slides/reorder": {
+            "post": {
+                "tags": [
+                    "Admin · Slides"
+                ],
+                "summary": "Save a new display order",
+                "operationId": "1f04f41a4e4f2b1872ac5b65123d2778",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Saved"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/testimonials": {
+            "get": {
+                "tags": [
+                    "Admin · Testimonials"
+                ],
+                "summary": "List records in display order",
+                "operationId": "38deb563d04a02579b402043d71dcfb1",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 200
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Records",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TestimonialAdmin"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PageMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin · Testimonials"
+                ],
+                "summary": "Create a record (multipart when it carries an image)",
+                "operationId": "7f45cc34b049574b0929032d15d4bf24",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TestimonialAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/TestimonialAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/testimonials/{id}": {
+            "put": {
+                "tags": [
+                    "Admin · Testimonials"
+                ],
+                "summary": "Update a record. With files, send POST and _method=PUT",
+                "operationId": "d2a1cee1343d950614f1b16dd600645a",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TestimonialAdmin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/TestimonialAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin · Testimonials"
+                ],
+                "summary": "Delete a record and its images",
+                "operationId": "5ad14bf8b43712a65740b4da1e14ff80",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/testimonials/reorder": {
+            "post": {
+                "tags": [
+                    "Admin · Testimonials"
+                ],
+                "summary": "Save a new display order",
+                "operationId": "79e54fffa80ed83d7a856b9974b1a975",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Saved"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/v1/health": {
             "get": {
                 "tags": [
@@ -42,9 +983,773 @@
                     }
                 }
             }
+        },
+        "/api/v1/newsletter": {
+            "post": {
+                "tags": [
+                    "Site"
+                ],
+                "summary": "Subscribe an email to the weekly tips newsletter",
+                "operationId": "0c925cbeaa1fa039dec969388a5cdc21",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "locale": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ar",
+                                            "en"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Subscribed (also returned when the email was already on the list)"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "429": {
+                        "description": "Too many requests"
+                    }
+                }
+            }
+        },
+        "/api/v1/site": {
+            "get": {
+                "tags": [
+                    "Site"
+                ],
+                "summary": "Shared site data: contact details, social links, numbers, SEO",
+                "operationId": "7cf53e1eb254b4893a047b603d7be68d",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/lang"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Site data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Site"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/home": {
+            "get": {
+                "tags": [
+                    "Site"
+                ],
+                "summary": "Everything the home page shows, in one request",
+                "operationId": "8a5af551d51d3242184aa7e57e6d6581",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/lang"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Home content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Home"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
+        "schemas": {
+            "PageMeta": {
+                "properties": {
+                    "total": {
+                        "description": "Request and response shapes. Admin shapes carry both languages (`*_ar`, `*_en`);\npublic shapes are already localized.",
+                        "type": "integer"
+                    },
+                    "page": {
+                        "type": "integer"
+                    },
+                    "last_page": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "AdminUser": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "editor"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "Stat": {
+                "properties": {
+                    "value": {
+                        "type": "integer"
+                    },
+                    "suffix": {
+                        "type": "string",
+                        "example": "+"
+                    },
+                    "label": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "SlideAdmin": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "title_ar": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "subtitle_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "subtitle_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "button_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "button_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "button_url": {
+                        "type": "string",
+                        "example": "/products",
+                        "nullable": true
+                    },
+                    "image": {
+                        "description": "Upload: JPG, PNG or WEBP up to 5 MB",
+                        "type": "string",
+                        "format": "binary",
+                        "writeOnly": true
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "missing_en": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "TestimonialAdmin": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "name_ar": {
+                        "type": "string"
+                    },
+                    "name_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "role_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "role_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "quote_ar": {
+                        "type": "string"
+                    },
+                    "quote_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "color": {
+                        "type": "string",
+                        "enum": [
+                            "field",
+                            "rust",
+                            "sky",
+                            "plum",
+                            "deep",
+                            "wheat",
+                            "bloom"
+                        ]
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "missing_en": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "PartnerAdmin": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "name_ar": {
+                        "type": "string"
+                    },
+                    "name_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "field_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "field_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "website": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "logo": {
+                        "description": "Upload: PNG or WEBP with a transparent background",
+                        "type": "string",
+                        "format": "binary",
+                        "writeOnly": true
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "missing_en": {
+                        "type": "boolean",
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "StatInput": {
+                "properties": {
+                    "value": {
+                        "type": "integer"
+                    },
+                    "suffix": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "label_ar": {
+                        "type": "string"
+                    },
+                    "label_en": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SettingsAdmin": {
+                "properties": {
+                    "site_name_ar": {
+                        "type": "string"
+                    },
+                    "site_name_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "footer_about_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "footer_about_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "phone1": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "phone2": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "whatsapp": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "inbox_email": {
+                        "description": "Where contact-form messages are sent. Never shown on the site.",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "address_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "address_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "hours_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "hours_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "map_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "facebook": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "youtube": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "linkedin": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "instagram": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "stats": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/StatInput"
+                        },
+                        "maxItems": 4
+                    },
+                    "hero_badge": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/StatInput"
+                            },
+                            {
+                                "type": "object",
+                                "nullable": true,
+                                "enum": [
+                                    null
+                                ]
+                            }
+                        ]
+                    },
+                    "seo_title_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "seo_title_en": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "seo_description_ar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "seo_description_en": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Site": {
+                "properties": {
+                    "site_name": {
+                        "type": "string"
+                    },
+                    "footer_about": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "contact": {
+                        "properties": {
+                            "phones": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "whatsapp": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "email": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "address": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "hours": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "map_url": {
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "social": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "stats": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Stat"
+                        }
+                    },
+                    "hero_badge": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Stat"
+                            },
+                            {
+                                "type": "object",
+                                "nullable": true,
+                                "enum": [
+                                    null
+                                ]
+                            }
+                        ]
+                    },
+                    "seo": {
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "description": {
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "Home": {
+                "properties": {
+                    "slides": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "subtitle": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "button": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "button_url": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "image": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "image_sm": {
+                                    "type": "string",
+                                    "format": "uri"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "slug": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "color": {
+                                    "type": "string"
+                                },
+                                "products_count": {
+                                    "type": "integer"
+                                },
+                                "types": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "services": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "slug": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "excerpt": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "image": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "nullable": true
+                                },
+                                "image_sm": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "nullable": true
+                                },
+                                "read_minutes": {
+                                    "type": "integer"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "partners": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "field": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "logo": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "website": {
+                                    "type": "string",
+                                    "nullable": true
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "testimonials": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "role": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "quote": {
+                                    "type": "string"
+                                },
+                                "color": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "Unauthenticated": {
+                "description": "Missing, expired or revoked token"
+            },
+            "NotFound": {
+                "description": "No such record"
+            },
+            "ValidationError": {
+                "description": "Invalid input",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "description": "API info and the components shared by every endpoint.",
+                                    "type": "string"
+                                },
+                                "errors": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "id": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "lang": {
+                "name": "lang",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "default": "ar",
+                    "enum": [
+                        "ar",
+                        "en"
+                    ]
+                }
+            }
+        },
         "securitySchemes": {
             "sanctum": {
                 "type": "http",
@@ -55,8 +1760,36 @@
     },
     "tags": [
         {
+            "name": "Admin · Auth",
+            "description": "Admin · Auth"
+        },
+        {
+            "name": "Admin · Overview",
+            "description": "Admin · Overview"
+        },
+        {
+            "name": "Admin · Partners",
+            "description": "Admin · Partners"
+        },
+        {
+            "name": "Admin · Settings",
+            "description": "Admin · Settings"
+        },
+        {
+            "name": "Admin · Slides",
+            "description": "Admin · Slides"
+        },
+        {
+            "name": "Admin · Testimonials",
+            "description": "Admin · Testimonials"
+        },
+        {
             "name": "System",
             "description": "System"
+        },
+        {
+            "name": "Site",
+            "description": "Site"
         }
     ]
 }
