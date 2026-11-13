@@ -77,3 +77,39 @@ export const socialIcons = {
     </svg>
   ),
 };
+
+const line = (paths: React.ReactNode, width = "1.8") =>
+  function Icon({ className }: P) {
+    return (
+      <svg className={className} aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={width}>
+        {paths}
+      </svg>
+    );
+  };
+
+export const ClockIcon = line(<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>);
+export const CalendarIcon = line(<><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></>);
+export const DownloadIcon = line(<path d="M12 3v12M7 10l5 5 5-5M4 19h16" />);
+export const FactoryIcon = line(<path d="M3 21V10l6 4V10l6 4V5h6v16z" />);
+export const CheckIcon = line(<path d="m5 12 5 5 9-10" />, "2.2");
+export const SearchIcon = line(<><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>);
+export const LinkIcon = line(<><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></>);
+/** Chevron toward the visual left or right, independent of reading direction. */
+export const ChevronLeft = line(<path d="m15 6-6 6 6 6" />, "2");
+export const ChevronRight = line(<path d="m9 6 6 6-6 6" />, "2");
+
+/** Service and "why us" icons; the keys match the API's `icon` values. */
+const shield = <><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" /><path d="m9 12 2 2 4-4" /></>;
+const people = <><circle cx="9" cy="8" r="3.2" /><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6" /><circle cx="17" cy="9" r="2.4" /><path d="M16 14c3 0 5 2 5 5" /></>;
+const lab = <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3" />;
+const truck = <><path d="M2 6h12v10H2zM14 9h4l4 4v3h-8" /><circle cx="6" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></>;
+export const topicIcons: Record<string, (p: P) => React.ReactElement> = {
+  shield: line(shield),
+  people: line(people),
+  visit: line(people),
+  lab: line(lab),
+  truck: line(truck),
+  leaf: line(<><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14" /><path d="M5 19c3-4 6-7 10-9" /></>),
+  training: line(<path d="M4 4h7a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-5a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h5z" />),
+};
+export const ShieldIcon = topicIcons.shield;

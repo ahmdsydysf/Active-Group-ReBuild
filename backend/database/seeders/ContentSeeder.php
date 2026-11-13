@@ -89,32 +89,32 @@ class ContentSeeder extends Seeder
         ]));
         [$obour, $tenth, $helwan] = $factories->all();
 
-        // [category slug, ar, en, description ar, description en, colour, [[type ar, type en, [[product ar, product en, pack ar, pack en, ingredient ar, ingredient en, factory, image, crops]]]]]
+        // [category slug, ar, en, description ar, description en, colour, [[type ar, type en, [[product ar, product en, pack ar, pack en, ingredient ar, ingredient en, factory, crops]]]]]
         $categories = [
             ['pesticides', 'المبيدات', 'Pesticides', 'حماية المحصول من الفطريات والحشرات والنيماتودا.', 'Crop protection from fungi, insects and nematodes.', 'rust', [
                 ['مبيد فطري', 'Fungicide', [
-                    ['أكتي-مكس 72%', 'Acti-Mix 72%', '250 جم · 500 جم · 1 كجم', '250 g · 500 g · 1 kg', 'مانكوزيب 64% + سيموكسانيل 8%', 'Mancozeb 64% + Cymoxanil 8%', $helwan, 'tools.jpg', ['tomato', 'potato', 'grape', 'cucumber']],
-                    ['كوبرا 50%', 'Cobra 50%', '500 جم', '500 g', 'أوكسي كلورور النحاس 50%', 'Copper oxychloride 50%', $helwan, 'boots.jpg', ['citrus', 'grape']],
+                    ['أكتي-مكس 72%', 'Acti-Mix 72%', '250 جم · 500 جم · 1 كجم', '250 g · 500 g · 1 kg', 'مانكوزيب 64% + سيموكسانيل 8%', 'Mancozeb 64% + Cymoxanil 8%', $helwan, ['tomato', 'potato', 'grape', 'cucumber']],
+                    ['كوبرا 50%', 'Cobra 50%', '500 جم', '500 g', 'أوكسي كلورور النحاس 50%', 'Copper oxychloride 50%', $helwan, ['citrus', 'grape']],
                 ]],
-                ['مبيد حشري', 'Insecticide', [['لامدا 5%', null, '250 مل', '250 ml', 'لامدا سيهالوثرين 5%', 'Lambda-cyhalothrin 5%', $helwan, 'gardener.jpg', ['maize', 'tomato']]]],
-                ['مبيد نيماتودا', 'Nematicide', [['نيماتو-ستوب', 'Nemato-Stop', '1 لتر', '1 L', 'أبامكتين 1.8%', 'Abamectin 1.8%', $helwan, 'hands-soil.jpg', ['tomato', 'potato']]]],
+                ['مبيد حشري', 'Insecticide', [['لامدا 5%', null, '250 مل', '250 ml', 'لامدا سيهالوثرين 5%', 'Lambda-cyhalothrin 5%', $helwan, ['maize', 'tomato']]]],
+                ['مبيد نيماتودا', 'Nematicide', [['نيماتو-ستوب', 'Nemato-Stop', '1 لتر', '1 L', 'أبامكتين 1.8%', 'Abamectin 1.8%', $helwan, ['tomato', 'potato']]]],
             ]],
             ['fertilizers', 'الأسمدة', 'Fertilizers', 'عناصر كبرى وأسمدة متخصصة لكل مرحلة نمو.', 'Macronutrients and specialty fertilizers for every growth stage.', 'field', [
                 ['عناصر كبرى', 'Macronutrients', [
-                    ['NPK 20-20-20', 'NPK 20-20-20', '25 كجم', '25 kg', 'نيتروجين 20% · فوسفور 20% · بوتاسيوم 20%', 'N 20% · P 20% · K 20%', $tenth, 'fertilizer-pack.jpg', ['tomato', 'wheat', 'citrus']],
-                    ['بوتاسيوم 50%', 'Potassium 50%', '25 كجم', '25 kg', 'سلفات البوتاسيوم 50%', 'Potassium sulphate 50%', $tenth, 'field.jpg', ['citrus', 'grape']],
-                    ['NPK 10-10-40', 'NPK 10-10-40', '25 كجم', '25 kg', 'نيتروجين 10% · فوسفور 10% · بوتاسيوم 40%', 'N 10% · P 10% · K 40%', $tenth, 'sunflowers.jpg', ['tomato', 'potato']],
+                    ['NPK 20-20-20', 'NPK 20-20-20', '25 كجم', '25 kg', 'نيتروجين 20% · فوسفور 20% · بوتاسيوم 20%', 'N 20% · P 20% · K 20%', $tenth, ['tomato', 'wheat', 'citrus']],
+                    ['بوتاسيوم 50%', 'Potassium 50%', '25 كجم', '25 kg', 'سلفات البوتاسيوم 50%', 'Potassium sulphate 50%', $tenth, ['citrus', 'grape']],
+                    ['NPK 10-10-40', 'NPK 10-10-40', '25 كجم', '25 kg', 'نيتروجين 10% · فوسفور 10% · بوتاسيوم 40%', 'N 10% · P 10% · K 40%', $tenth, ['tomato', 'potato']],
                 ]],
-                ['محسن تربة', 'Soil conditioner', [['هيوميك 80%', 'Humic 80%', '1 كجم', '1 kg', 'هيومات البوتاسيوم 80%', 'Potassium humate 80%', $obour, 'hands-soil-2.jpg', ['wheat', 'maize']]]],
+                ['محسن تربة', 'Soil conditioner', [['هيوميك 80%', 'Humic 80%', '1 كجم', '1 kg', 'هيومات البوتاسيوم 80%', 'Potassium humate 80%', $obour, ['wheat', 'maize']]]],
             ]],
             ['growth-regulators', 'منظمات النمو', 'Growth regulators', 'تحسين العقد والتزهير وحجم الثمار وجودتها.', 'Better flowering, fruit set, fruit size and quality.', 'wheat', [
-                ['تحسين العقد', 'Fruit set', [['جبريلين 10%', 'Gibberellin 10%', '100 مل', '100 ml', 'حمض الجبريليك 10%', 'Gibberellic acid 10%', $obour, 'sprouts.jpg', ['grape', 'citrus']]]],
-                ['تكبير الثمار', 'Fruit sizing', [['سايتوكينين بلس', 'Cytokinin Plus', '250 مل', '250 ml', 'سايتوكينين 0.1%', 'Cytokinin 0.1%', $obour, 'planting.jpg', ['grape', 'tomato']]]],
+                ['تحسين العقد', 'Fruit set', [['جبريلين 10%', 'Gibberellin 10%', '100 مل', '100 ml', 'حمض الجبريليك 10%', 'Gibberellic acid 10%', $obour, ['grape', 'citrus']]]],
+                ['تكبير الثمار', 'Fruit sizing', [['سايتوكينين بلس', 'Cytokinin Plus', '250 مل', '250 ml', 'سايتوكينين 0.1%', 'Cytokinin 0.1%', $obour, ['grape', 'tomato']]]],
             ]],
             ['micronutrients', 'العناصر الصغرى', 'Micronutrients', 'زنك وبورون وحديد مخلبي لعلاج نقص العناصر بسرعة.', 'Chelated zinc, boron and iron to fix deficiencies fast.', 'sky', [
                 ['عناصر صغرى', 'Micronutrients', [
-                    ['زنك مخلبي 12%', 'Chelated Zinc 12%', '1 كجم', '1 kg', 'زنك EDTA 12%', 'Zinc EDTA 12%', $obour, 'watering.jpg', ['maize', 'wheat']],
-                    ['بورون 20%', 'Boron 20%', '1 لتر', '1 L', 'بورون إيثانول أمين 20%', 'Boron ethanolamine 20%', $obour, 'watering-2.jpg', ['tomato', 'grape']],
+                    ['زنك مخلبي 12%', 'Chelated Zinc 12%', '1 كجم', '1 kg', 'زنك EDTA 12%', 'Zinc EDTA 12%', $obour, ['maize', 'wheat']],
+                    ['بورون 20%', 'Boron 20%', '1 لتر', '1 L', 'بورون إيثانول أمين 20%', 'Boron ethanolamine 20%', $obour, ['tomato', 'grape']],
                 ]],
             ]],
         ];
@@ -133,7 +133,7 @@ class ContentSeeder extends Seeder
 
             foreach ($types as $t => [$tAr, $tEn, $products]) {
                 $type = $category->types()->create(['name_ar' => $tAr, 'name_en' => $tEn, 'sort_order' => $t]);
-                foreach ($products as [$pAr, $pEn, $packAr, $packEn, $ingAr, $ingEn, $factory, $img, $cropKeys]) {
+                foreach ($products as [$pAr, $pEn, $packAr, $packEn, $ingAr, $ingEn, $factory, $cropKeys]) {
                     $rows = fn (int $l) => array_map(fn ($k) => [
                         'crop' => $crops[$k][$l], 'pest' => null, 'rate' => $l ? '250 g / 100 L water' : '250 جم / 100 لتر ماء',
                         'interval' => $l ? '7 to 10 days' : '7 إلى 10 أيام', 'phi' => $l ? '7 days' : '7 أيام',
@@ -144,7 +144,8 @@ class ContentSeeder extends Seeder
                         'summary_ar' => "{$tAr} من {$nAr} أكتيف، بنشرة فنية ومعدلات استخدام لكل محصول.",
                         'summary_en' => $pEn ? "{$tEn} from Active {$nEn}, with a technical leaflet and rates for each crop." : null,
                         'doses_ar' => $rows(0), 'doses_en' => $pEn ? $rows(1) : null,
-                        'image' => $this->image($img, Product::UPLOAD_DIR), 'sort_order' => $n++, 'is_featured' => $n <= 3,
+                        // No photo: the site draws the pack in the category colour until the client uploads one.
+                        'sort_order' => $n++, 'is_featured' => $n <= 3,
                     ]);
                 }
             }

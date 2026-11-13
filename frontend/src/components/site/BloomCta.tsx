@@ -1,8 +1,9 @@
 import type { Messages } from "@/messages/ar";
+import Flowers, { type FlowerSpec } from "./Flowers";
 import { WhatsAppIcon } from "./icons";
 
 // Positions and colours of the opening flowers, as in the design.
-const FLOWERS = [
+const FLOWERS: FlowerSpec[] = [
   { left: "8%", top: "20%", s: 110, pc: "#fff", cc: "#F2C230", d: -0.24 },
   { left: "22%", top: "62%", s: 70, pc: "#E0607E", cc: "#fff", d: -1.34 },
   { left: "78%", top: "10%", s: 90, pc: "#F2C230", cc: "#7A4A0C", d: -1.97 },
@@ -15,16 +16,7 @@ const FLOWERS = [
 export default function BloomCta({ t, whatsapp }: { t: Messages["cta"]; whatsapp: string | null }) {
   return (
     <section className="band bloomcta" aria-labelledby="ctaH">
-      <div className="flowers" aria-hidden="true">
-        {FLOWERS.map((f, i) => (
-          <div key={i} className="fl" style={{ left: f.left, top: f.top, "--s": `${f.s}px`, "--pc": f.pc, "--cc": f.cc, "--d": `${f.d}s`, opacity: 0.55 } as React.CSSProperties}>
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((r) => (
-              <span key={r} className="petal" style={{ "--r": `${r}deg` } as React.CSSProperties} />
-            ))}
-            <span className="core" />
-          </div>
-        ))}
-      </div>
+      <Flowers items={FLOWERS} opacity={0.55} />
       <div className="wrap">
         <div>
           <h2 id="ctaH">{t.title}</h2>

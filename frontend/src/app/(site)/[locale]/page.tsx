@@ -5,7 +5,7 @@ import CountUp from "@/components/shared/CountUp";
 import FamilyCard from "@/components/site/FamilyCard";
 import Garden from "@/components/shared/Garden";
 import Journey from "@/components/site/Journey";
-import Pack, { type PackKind } from "@/components/site/Packs";
+import Pack, { type PackShape } from "@/components/site/Packs";
 import { ForwardArrow } from "@/components/site/icons";
 import { getHome, getSite } from "@/lib/api";
 import { whatsappHref } from "@/lib/contact";
@@ -14,7 +14,12 @@ import { formatNumber } from "@/lib/format";
 import type { Category } from "@/lib/types";
 
 // Category colour (set in the dashboard) -> card style and pack drawing from the design.
-const FAMILY: Record<string, [string, PackKind]> = { rust: ["f1", "pesticide"], field: ["f2", "fertilizer"], wheat: ["f3", "regulator"] };
+// The home page shows the three main families; other colours (micronutrients) live on the products page.
+const FAMILY: Record<string, [string, PackShape, "pesticide" | "fertilizer" | "regulator"]> = {
+  rust: ["f1", "bottle", "pesticide"],
+  field: ["f2", "bag", "fertilizer"],
+  wheat: ["f3", "jerrycan", "regulator"],
+};
 // Advice card colours, in display order.
 const ADVICE = [["#D9EBD1", "#123F1C"], ["#DCEEF5", "#0E3A4A"], ["var(--bloom)", "#fff"], ["var(--sun)", "var(--deep)"], ["#F7DCD4", "#5A1E12"]];
 // Testimonial card colours offered in the dashboard.
@@ -41,6 +46,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const [hero, ...rest] = home.slides;
   const collage = [hero, ...rest].filter(Boolean).slice(0, 3);
   const badge = site.stats[2]; // the third number doubles as the hero photo badge
+  const families = home.categories.filter((c) => c.color in FAMILY).slice(0, 3);
   const logos = home.partners.length ? Array.from({ length: Math.ceil(MARQUEE_MIN / home.partners.length) * 2 }, () => home.partners).flat() : [];
 
   return (
@@ -95,7 +101,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </div>
         </section>
 
-        {home.categories.length > 0 && (
+        {families.length > 0 && (
           <section className="band families" aria-labelledby="famH">
             <div className="wrap">
               <div className="sec-head">
@@ -106,8 +112,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <a className="more text-field" href={href(locale, "products/")}>{t.families.all}</a>
               </div>
               <div className="fam-grid">
-                {home.categories.map((c: Category) => {
-                  const [cls, pack] = FAMILY[c.color] ?? FAMILY.field;
+                {families.map((c: Category) => {
+                  const [cls, shape, label] = FAMILY[c.color];
                   return (
                     <FamilyCard key={c.id} className={`fam ${cls}`} href={href(locale, `products/?c=${c.slug}`)}>
                       <span className="count">{t.families.count(c.products_count)}</span>
@@ -116,7 +122,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                       <ul>
                         {c.types.map((type) => <li key={type}>{type}</li>)}
                       </ul>
-                      <Pack kind={pack} labels={t.families.packs} />
+                      <Pack shape={shape} color={c.color} label={shape === "bag" ? "NPK 20-20-20" : t.families.packs[label]} sub={shape === "bag" ? t.families.packs.fertilizer : undefined} />
                     </FamilyCard>
                   );
                 })}
@@ -148,7 +154,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </section>
         )}
 
-        {home.services.length > 0 && (
+        {home.advice.length > 0 && (
           <section className="band" aria-labelledby="aH">
             <div className="wrap">
               <div className="sec-head">
@@ -159,7 +165,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <a className="more text-field" href={href(locale, "experiences/")}>{t.advice.all}</a>
               </div>
               <div className="advice-grid">
-                {home.services.map((a, i) => (
+                {home.advice.map((a, i) => (
                   <a key={a.id} className={`adv${i === 0 ? " big" : ""}`} href={href(locale, `experiences/${a.slug}/`)} style={{ "--c": ADVICE[i % 5][0], "--ink": ADVICE[i % 5][1] } as React.CSSProperties}>
                     {a.image && (
                       // eslint-disable-next-line @next/next/no-img-element -- static export serves files as they are
@@ -169,7 +175,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                       {a.type && <span className="tag">{a.type}</span>}
                       <h3>{a.title}</h3>
                       {i === 0 && a.excerpt && <p>{a.excerpt}</p>}
-                      <small>{t.advice.read(a.read_minutes)}</small>
+                      <small>{t.common.read(a.read_minutes)}</small>
                     </div>
                   </a>
                 ))}

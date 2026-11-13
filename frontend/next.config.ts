@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   images: { unoptimized: true },
   poweredByHeader: false,
+  // One 404 page for the site and the dashboard, which have separate root layouts.
+  experimental: { globalNotFound: true },
   turbopack: {
     rules: {
       "*.css": {
