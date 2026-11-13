@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getPosts } from "@/lib/api";
 import { href, type Locale, messages } from "@/lib/i18n";
 import { formatDate } from "@/lib/format";
-import { home } from "@/lib/page";
+import { home, staticParams } from "@/lib/page";
 import PageHero from "./PageHero";
 import PostCard from "./PostCard";
 import { CalendarIcon, ClockIcon, WhatsAppIcon, socialIcons } from "./icons";
@@ -92,5 +92,5 @@ export default async function ArticlePage({ locale, section, slug }: { locale: L
 /** Static params for every published article of a section, in both languages. */
 export async function articleParams(section: "advice" | "blog", locales: readonly Locale[]) {
   const lists = await Promise.all(locales.map(async (locale) => (await getPosts(locale, section)).posts.map((p) => ({ locale, slug: p.slug }))));
-  return lists.flat();
+  return staticParams(lists.flat(), locales[0]);
 }

@@ -4,7 +4,7 @@ import ProductCard, { ProductArt } from "@/components/site/ProductCard";
 import { DownloadIcon, ShieldIcon, WhatsAppIcon } from "@/components/site/icons";
 import { getCatalog } from "@/lib/api";
 import { href, locales, messages } from "@/lib/i18n";
-import { home, pageLocale, pageMeta } from "@/lib/page";
+import { home, pageLocale, pageMeta, staticParams } from "@/lib/page";
 
 const BADGE: Record<string, string> = { rust: "bg-rust", field: "bg-field", wheat: "bg-wheat", sky: "bg-sky", plum: "bg-[#7A2140]", deep: "bg-deep", bloom: "bg-bloom" };
 
@@ -12,7 +12,7 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const lists = await Promise.all(locales.map(async (locale) => (await getCatalog(locale)).products.map((p) => ({ locale, slug: p.slug }))));
-  return lists.flat();
+  return staticParams(lists.flat(), locales[0]);
 }
 
 const find = async (locale: Awaited<ReturnType<typeof pageLocale>>, slug: string) => (await getCatalog(locale)).products.find((p) => p.slug === decodeURIComponent(slug));

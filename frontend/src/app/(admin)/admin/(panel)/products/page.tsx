@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { BulkBar, Check, DPager, Filter, SearchBox, TableState } from "@/components/admin/ListParts";
 import Switch from "@/components/admin/Switch";
 import { EditIcon, PlusIcon } from "@/components/admin/icons";
-import Pack, { PACK_COLORS, packShape } from "@/components/site/Packs";
+import ProductCell from "@/components/admin/ProductCell";
+import { PACK_COLORS } from "@/components/site/Packs";
 import { api } from "@/lib/admin/api";
 import { ago } from "@/lib/admin/format";
 import type { Row } from "@/lib/admin/types";
@@ -80,20 +81,7 @@ export default function ProductsPage() {
                   <tr key={p.id} style={{ "--c": PACK_COLORS[color] } as React.CSSProperties}>
                     <td><Check label={`تحديد ${p.name_ar}`} checked={list.selected.includes(p.id)} onChange={() => list.toggleRow(p.id)} /></td>
                     <td>
-                      <div className="nm">
-                        <span className="t">
-                          {p.image_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element -- API image
-                            <img src={p.image_url} alt="" className="h-[34px] w-auto object-contain" />
-                          ) : (
-                            <Pack shape={packShape(color, p.packs_ar)} color={color} label={p.type_name ?? ""} style={{ height: 34, width: "auto" }} />
-                          )}
-                        </span>
-                        <div>
-                          <b><bdi>{p.name_ar}</bdi></b>
-                          {p.name_en ? <small><bdi>{p.name_en}</bdi></small> : <small className="warn">ينقصه الاسم الإنجليزي</small>}
-                        </div>
-                      </div>
+                      <ProductCell name={p.name_ar} nameEn={p.name_en} image={p.image_url} color={color} packs={p.packs_ar} label={p.type_name ?? ""} />
                     </td>
                     <td className="hide-s">{p.category && <span className="pill">{p.category.name_ar}{p.type_name ? ` · ${p.type_name}` : ""}</span>}</td>
                     <td className="hide-s">{p.factory_name ?? "—"}</td>

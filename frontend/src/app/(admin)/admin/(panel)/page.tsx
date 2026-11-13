@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import ContentGarden from "@/components/admin/ContentGarden";
 import { BookIcon, BoxIcon, EditIcon, ImageIcon } from "@/components/admin/icons";
 import { useShell } from "@/components/admin/Shell";
-import Pack, { PACK_COLORS, packShape } from "@/components/site/Packs";
+import ProductCell from "@/components/admin/ProductCell";
+import { PACK_COLORS } from "@/components/site/Packs";
 import CountUp from "@/components/shared/CountUp";
 import { api } from "@/lib/admin/api";
 import { ago } from "@/lib/admin/format";
@@ -195,20 +196,7 @@ export default function OverviewPage() {
                     return (
                       <tr key={p.id} style={{ "--c": PACK_COLORS[color] } as React.CSSProperties}>
                         <td>
-                          <div className="nm">
-                            <span className="t">
-                              {p.image_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element -- API image
-                                <img src={p.image_url} alt="" className="h-[34px] w-auto object-contain" />
-                              ) : (
-                                <Pack shape={packShape(color, p.packs_ar)} color={color} label={p.type ?? ""} style={{ height: 34, width: "auto" }} />
-                              )}
-                            </span>
-                            <div>
-                              <b><bdi>{p.name_ar}</bdi></b>
-                              {p.name_en ? <small><bdi>{p.name_en}</bdi></small> : <small className="warn">ينقصه الاسم الإنجليزي</small>}
-                            </div>
-                          </div>
+                          <ProductCell name={p.name_ar} nameEn={p.name_en} image={p.image_url} color={color} packs={p.packs_ar} label={p.type ?? ""} />
                         </td>
                         <td className="hide-s">{p.category && <span className="pill">{p.category}{p.type ? ` · ${p.type}` : ""}</span>}</td>
                         <td className="hide-s">{p.factory ?? "—"}</td>

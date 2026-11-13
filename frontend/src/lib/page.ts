@@ -26,3 +26,9 @@ export const listLabels = (locale: Locale) => {
   const { all, empty, pages, prev, next } = messages(locale).common;
   return { all, empty, pages, prev, next };
 };
+
+/**
+ * Static export refuses a dynamic route with no pages. When a list is empty (every post deleted,
+ * say), one placeholder path keeps the build going; its page calls notFound().
+ */
+export const staticParams = <T extends { locale: string; slug: string }>(list: T[], locale: string) => (list.length ? list : [{ locale, slug: "_" }]);
