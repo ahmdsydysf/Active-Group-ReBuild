@@ -1035,7 +1035,7 @@
                 "tags": [
                     "Site"
                 ],
-                "summary": "Shared site data: contact details, social links, numbers, SEO",
+                "summary": "Shared site data: contact details, social links, numbers, SEO, footer categories",
                 "operationId": "7cf53e1eb254b4893a047b603d7be68d",
                 "parameters": [
                     {
@@ -1412,25 +1412,12 @@
                         "nullable": true
                     },
                     "stats": {
+                        "description": "The third number is also shown on the hero photos",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/StatInput"
                         },
                         "maxItems": 4
-                    },
-                    "hero_badge": {
-                        "oneOf": [
-                            {
-                                "$ref": "#/components/schemas/StatInput"
-                            },
-                            {
-                                "type": "object",
-                                "nullable": true,
-                                "enum": [
-                                    null
-                                ]
-                            }
-                        ]
                     },
                     "seo_title_ar": {
                         "type": "string",
@@ -1503,20 +1490,6 @@
                             "$ref": "#/components/schemas/Stat"
                         }
                     },
-                    "hero_badge": {
-                        "oneOf": [
-                            {
-                                "$ref": "#/components/schemas/Stat"
-                            },
-                            {
-                                "type": "object",
-                                "nullable": true,
-                                "enum": [
-                                    null
-                                ]
-                            }
-                        ]
-                    },
                     "seo": {
                         "properties": {
                             "title": {
@@ -1529,6 +1502,20 @@
                             }
                         },
                         "type": "object"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "slug": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"

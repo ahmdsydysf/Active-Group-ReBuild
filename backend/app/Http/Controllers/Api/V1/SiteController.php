@@ -19,7 +19,7 @@ final class SiteController extends Controller
 {
     #[OA\Get(
         path: '/api/v1/site',
-        summary: 'Shared site data: contact details, social links, numbers, SEO',
+        summary: 'Shared site data: contact details, social links, numbers, SEO, footer categories',
         tags: ['Site'],
         parameters: [new OA\Parameter(ref: '#/components/parameters/lang')],
         responses: [new OA\Response(response: 200, description: 'Site data', content: new OA\JsonContent(properties: [
@@ -28,7 +28,14 @@ final class SiteController extends Controller
     )]
     public function site(Request $request): JsonResponse
     {
-        return $this->cached(['data' => Settings::forSite($this->locale($request))]);
+        $l = $this->locale($request);
+
+        return $this->cached(['data' => [
+            ...Settings::forSite($l),
+            // Footer product links on every page.
+            'categories' => ProductCategory::query()->active()->ordered()->get(['slug', 'name_ar', 'name_en'])
+                ->map(fn (ProductCategory $c) => ['slug' => $c->slug, 'name' => $c->tr('name', $l)]),
+        ]]);
     }
 
     #[OA\Get(

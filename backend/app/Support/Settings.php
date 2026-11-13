@@ -36,9 +36,8 @@ final class Settings
         'youtube' => null,
         'linkedin' => null,
         'instagram' => null,
-        // Numbers: four counters on the home page, plus the badge on the hero collage
+        // Numbers: four counters on the home page. The third one is also the badge on the hero photos.
         'stats' => [],
-        'hero_badge' => null,
         // SEO
         'seo_title_ar' => null,
         'seo_title_en' => null,
@@ -51,10 +50,10 @@ final class Settings
         $text = 'nullable|string|max:255';
         $url = 'nullable|url:https,http|max:500';
         $phone = ['nullable', 'string', 'max:20', 'regex:/^\+?[0-9 ]{6,20}$/'];
-        $stat = fn (string $p, string $required) => [
-            "{$p}.value" => "{$required}|integer|min:0|max:100000000",
+        $stat = fn (string $p) => [
+            "{$p}.value" => 'required|integer|min:0|max:100000000',
             "{$p}.suffix" => 'nullable|string|max:3',
-            "{$p}.label_ar" => "{$required}|string|max:80",
+            "{$p}.label_ar" => 'required|string|max:80',
             "{$p}.label_en" => 'nullable|string|max:80',
         ];
 
@@ -78,9 +77,7 @@ final class Settings
             'linkedin' => $url,
             'instagram' => $url,
             'stats' => 'sometimes|array|max:4',
-            ...$stat('stats.*', 'required'),
-            'hero_badge' => 'nullable|array',
-            ...$stat('hero_badge', 'required_with:hero_badge'),
+            ...$stat('stats.*'),
             'seo_title_ar' => 'nullable|string|max:70',
             'seo_title_en' => 'nullable|string|max:70',
             'seo_description_ar' => 'nullable|string|max:170',
@@ -139,7 +136,6 @@ final class Settings
                 'instagram' => $s['instagram'],
             ]),
             'stats' => array_map($stat, $s['stats'] ?? []),
-            'hero_badge' => $s['hero_badge'] ? $stat($s['hero_badge']) : null,
             'seo' => ['title' => $tr('seo_title'), 'description' => $tr('seo_description')],
         ];
     }

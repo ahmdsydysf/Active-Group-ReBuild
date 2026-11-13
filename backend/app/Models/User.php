@@ -21,8 +21,6 @@ class User extends Authenticatable
 
     public const ROLE_EDITOR = 'editor';
 
-    public const ROLES = [self::ROLE_ADMIN, self::ROLE_EDITOR];
-
     protected function casts(): array
     {
         return [
@@ -31,10 +29,5 @@ class User extends Authenticatable
             'is_active' => 'boolean',
             'password' => 'hashed',
         ];
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->role === self::ROLE_ADMIN;
     }
 }

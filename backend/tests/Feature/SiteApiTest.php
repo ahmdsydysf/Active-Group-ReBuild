@@ -62,7 +62,8 @@ class SiteApiTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.site_name', 'Active Group')
             ->assertJsonPath('data.stats.2.value', 1200)
-            ->assertJsonPath('data.hero_badge.label', 'Farms and co-ops we serve');
+            ->assertJsonPath('data.stats.2.label', 'Farms and co-ops we serve')
+            ->assertJsonPath('data.categories.0', ['slug' => 'pesticides', 'name' => 'Pesticides']);
 
         $this->assertStringNotContainsString('private@example.com', $response->getContent());
     }

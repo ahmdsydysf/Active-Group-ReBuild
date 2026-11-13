@@ -31,7 +31,7 @@ class AdminContentTest extends TestCase
         $res = $this->post('/api/v1/admin/slides', [
             'title_ar' => 'عنوان',
             'image' => UploadedFile::fake()->image('hero.jpg', 2400, 1200),
-        ], ['Accept' => 'application/json'])->assertCreated();
+        ], ['Accept' => 'application/json'])->assertCreated()->assertJsonPath('data.is_active', true);
 
         $path = Slide::query()->first()->image;
         $this->assertStringEndsWith('.webp', $path);

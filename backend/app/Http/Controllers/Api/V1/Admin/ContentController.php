@@ -62,7 +62,7 @@ abstract class ContentController extends Controller
         $record = new $this->model;
         $this->save($record, $request);
 
-        return response()->json(['data' => $this->present($record)], 201);
+        return response()->json(['data' => $this->present($record->refresh())], 201);
     }
 
     public function update(Request $request, int $id): JsonResponse

@@ -28,7 +28,6 @@ class SettingsSeeder extends Seeder
                 ['value' => 1200, 'suffix' => '+', 'label_ar' => 'مزارع وجمعية بنخدمهم', 'label_en' => 'Farms and co-ops we serve'],
                 ['value' => 22, 'suffix' => '', 'label_ar' => 'محافظة نوصل لها', 'label_en' => 'Governorates we deliver to'],
             ],
-            'hero_badge' => ['value' => 1200, 'suffix' => '+', 'label_ar' => 'مزارع وجمعية بنخدمهم', 'label_en' => 'Farms and co-ops we serve'],
             'seo_title_ar' => 'أسمدة ومبيدات ومنظمات نمو | أكتيف جروب',
             'seo_title_en' => 'Fertilizers, pesticides and growth regulators | Active Group',
             'seo_description_ar' => 'أكتيف جروب لتوريد وتجارة الأسمدة والمبيدات ومنظمات النمو في مصر، مع متابعة فنية من مهندسين زراعيين.',

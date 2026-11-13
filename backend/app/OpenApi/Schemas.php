@@ -92,8 +92,7 @@ use OpenApi\Attributes as OA;
     new OA\Property(property: 'youtube', type: 'string', nullable: true),
     new OA\Property(property: 'linkedin', type: 'string', nullable: true),
     new OA\Property(property: 'instagram', type: 'string', nullable: true),
-    new OA\Property(property: 'stats', type: 'array', maxItems: 4, items: new OA\Items(ref: '#/components/schemas/StatInput')),
-    new OA\Property(property: 'hero_badge', ref: '#/components/schemas/StatInput', nullable: true),
+    new OA\Property(property: 'stats', description: 'The third number is also shown on the hero photos', type: 'array', maxItems: 4, items: new OA\Items(ref: '#/components/schemas/StatInput')),
     new OA\Property(property: 'seo_title_ar', type: 'string', nullable: true),
     new OA\Property(property: 'seo_title_en', type: 'string', nullable: true),
     new OA\Property(property: 'seo_description_ar', type: 'string', nullable: true),
@@ -112,11 +111,14 @@ use OpenApi\Attributes as OA;
     ], type: 'object'),
     new OA\Property(property: 'social', type: 'object', additionalProperties: new OA\AdditionalProperties(type: 'string')),
     new OA\Property(property: 'stats', type: 'array', items: new OA\Items(ref: '#/components/schemas/Stat')),
-    new OA\Property(property: 'hero_badge', ref: '#/components/schemas/Stat', nullable: true),
     new OA\Property(property: 'seo', properties: [
         new OA\Property(property: 'title', type: 'string', nullable: true),
         new OA\Property(property: 'description', type: 'string', nullable: true),
     ], type: 'object'),
+    new OA\Property(property: 'categories', type: 'array', items: new OA\Items(properties: [
+        new OA\Property(property: 'slug', type: 'string'),
+        new OA\Property(property: 'name', type: 'string'),
+    ])),
 ])]
 #[OA\Schema(schema: 'Home', properties: [
     new OA\Property(property: 'slides', type: 'array', items: new OA\Items(properties: [
