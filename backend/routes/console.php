@@ -1,8 +1,14 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Support\Publisher;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// Runs from one cPanel cron line: * * * * * php /path/to/backend/artisan schedule:run
+Schedule::command('sanctum:prune-expired --hours=24')->daily();
+
+// Scheduled articles appear on the static site only after a rebuild, so publish when one comes due.
+Schedule::call(function (): void {
+    if (Publisher::configured() && Publisher::hasDuePosts()) {
+        Publisher::publish();
+    }
+})->name('publish-due-posts')->everyFifteenMinutes()->withoutOverlapping();
