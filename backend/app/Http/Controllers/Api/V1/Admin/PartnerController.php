@@ -3,19 +3,17 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Models\Partner;
-use App\OpenApi\AdminCreate;
-use App\OpenApi\AdminDelete;
-use App\OpenApi\AdminList;
+use App\OpenApi\AdminBulk;
+use App\OpenApi\AdminRecord;
 use App\OpenApi\AdminReorder;
-use App\OpenApi\AdminUpdate;
+use App\OpenApi\AdminResource;
 use Illuminate\Database\Eloquent\Model;
 
 /** @extends ContentController<Partner> */
-#[AdminList('partners', 'Admin · Partners', 'PartnerAdmin')]
-#[AdminCreate('partners', 'Admin · Partners', 'PartnerAdmin')]
-#[AdminUpdate('partners', 'Admin · Partners', 'PartnerAdmin')]
-#[AdminDelete('partners', 'Admin · Partners', 'PartnerAdmin')]
-#[AdminReorder('partners', 'Admin · Partners', 'PartnerAdmin')]
+#[AdminResource('partners', 'Admin · Partners', 'PartnerAdmin')]
+#[AdminRecord('partners', 'Admin · Partners', 'PartnerAdmin')]
+#[AdminReorder('partners', 'Admin · Partners')]
+#[AdminBulk('partners', 'Admin · Partners')]
 final class PartnerController extends ContentController
 {
     protected string $model = Partner::class;

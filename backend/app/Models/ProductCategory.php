@@ -6,17 +6,21 @@ use App\Models\Concerns\HasImages;
 use App\Models\Concerns\HasOrderingScopes;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\TouchesSite;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ProductCategory extends Model
 {
-    use HasImages, HasOrderingScopes, HasSlug, HasTranslations;
+    use HasImages, HasOrderingScopes, HasSlug, HasTranslations, TouchesSite;
 
     public const UPLOAD_DIR = 'categories';
 
     public const IMAGES = ['image'];
+
+    /** Card colours on the site: rust for pesticides, field for fertilizers, wheat for growth regulators, sky for micronutrients. */
+    public const COLORS = ['rust', 'field', 'wheat', 'sky', 'plum', 'deep', 'bloom'];
 
     public string $slugSource = 'name';
 

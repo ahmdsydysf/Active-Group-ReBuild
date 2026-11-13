@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Models\Concerns\HasImages;
 use App\Models\Concerns\HasOrderingScopes;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\TouchesSite;
 use Illuminate\Database\Eloquent\Model;
 
 class Partner extends Model
 {
-    use HasImages, HasOrderingScopes, HasTranslations;
+    use HasImages, HasOrderingScopes, HasTranslations, TouchesSite;
 
     public const UPLOAD_DIR = 'partners';
 

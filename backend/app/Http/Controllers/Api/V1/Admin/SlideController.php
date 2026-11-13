@@ -3,19 +3,17 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Models\Slide;
-use App\OpenApi\AdminCreate;
-use App\OpenApi\AdminDelete;
-use App\OpenApi\AdminList;
+use App\OpenApi\AdminBulk;
+use App\OpenApi\AdminRecord;
 use App\OpenApi\AdminReorder;
-use App\OpenApi\AdminUpdate;
+use App\OpenApi\AdminResource;
 use Illuminate\Database\Eloquent\Model;
 
 /** @extends ContentController<Slide> */
-#[AdminList('slides', 'Admin · Slides', 'SlideAdmin')]
-#[AdminCreate('slides', 'Admin · Slides', 'SlideAdmin')]
-#[AdminUpdate('slides', 'Admin · Slides', 'SlideAdmin')]
-#[AdminDelete('slides', 'Admin · Slides', 'SlideAdmin')]
-#[AdminReorder('slides', 'Admin · Slides', 'SlideAdmin')]
+#[AdminResource('slides', 'Admin · Slides', 'SlideAdmin')]
+#[AdminRecord('slides', 'Admin · Slides', 'SlideAdmin')]
+#[AdminReorder('slides', 'Admin · Slides')]
+#[AdminBulk('slides', 'Admin · Slides')]
 final class SlideController extends ContentController
 {
     protected string $model = Slide::class;

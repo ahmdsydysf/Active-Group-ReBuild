@@ -8,18 +8,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('service_types', function (Blueprint $table) {
+        Schema::create('team_members', function (Blueprint $table) {
             $table->id();
-            $table->string('slug', 120)->unique();
             $table->string('name_ar');
             $table->string('name_en')->nullable();
+            $table->string('role_ar')->nullable();
+            $table->string('role_en')->nullable();
+            $table->string('photo', 500)->nullable();
             $table->unsignedInteger('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->index(['is_active', 'sort_order']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('service_types');
+        Schema::dropIfExists('team_members');
     }
 };

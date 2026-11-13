@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Models\Concerns\HasOrderingScopes;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\TouchesSite;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductType extends Model
 {
-    use HasOrderingScopes, HasSlug, HasTranslations;
+    use HasOrderingScopes, HasSlug, HasTranslations, TouchesSite;
 
     public string $slugSource = 'name';
 

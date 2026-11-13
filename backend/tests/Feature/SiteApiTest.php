@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Partner;
 use App\Models\Testimonial;
 use App\Support\Settings;
-use Database\Seeders\HomeContentSeeder;
+use Database\Seeders\ContentSeeder;
 use Database\Seeders\SettingsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +19,7 @@ class SiteApiTest extends TestCase
     {
         parent::setUp();
         Storage::fake('public');
-        $this->seed([SettingsSeeder::class, HomeContentSeeder::class]);
+        $this->seed([SettingsSeeder::class, ContentSeeder::class]);
     }
 
     public function test_home_returns_every_section_in_arabic_by_default(): void
@@ -28,14 +28,14 @@ class SiteApiTest extends TestCase
             ->assertOk()
             ->assertHeader('Cache-Control', 'max-age=60, public')
             ->assertJsonCount(3, 'data.slides')
-            ->assertJsonCount(3, 'data.categories')
-            ->assertJsonCount(5, 'data.services')
+            ->assertJsonCount(4, 'data.categories')
+            ->assertJsonCount(5, 'data.advice')
             ->assertJsonCount(5, 'data.partners')
             ->assertJsonCount(5, 'data.testimonials')
             ->assertJsonPath('data.slides.0.title', 'غذاء متكامل للنبات، وحماية من البذرة لحد الحصاد')
-            ->assertJsonPath('data.categories.1.products_count', 6)
-            ->assertJsonPath('data.categories.0.types', ['فطرية', 'حشرية', 'نيماتودية'])
-            ->assertJsonPath('data.services.0.title', 'برنامج تسميد الطماطم في العروة الصيفية');
+            ->assertJsonPath('data.categories.1.products_count', 4)
+            ->assertJsonPath('data.categories.0.types', ['مبيد فطري', 'مبيد حشري', 'مبيد نيماتودا'])
+            ->assertJsonPath('data.advice.0.title', 'برنامج تسميد الطماطم في العروة الصيفية');
     }
 
     public function test_home_in_english_falls_back_to_arabic_when_a_field_is_empty(): void

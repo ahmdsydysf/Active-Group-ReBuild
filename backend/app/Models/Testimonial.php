@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\Concerns\HasOrderingScopes;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\TouchesSite;
 use Illuminate\Database\Eloquent\Model;
 
 class Testimonial extends Model
 {
-    use HasOrderingScopes, HasTranslations;
+    use HasOrderingScopes, HasTranslations, TouchesSite;
 
     /** Card colours the dashboard offers; they map to the site palette. */
     public const COLORS = ['field', 'rust', 'sky', 'plum', 'deep', 'wheat', 'bloom'];

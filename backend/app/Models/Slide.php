@@ -5,12 +5,13 @@ namespace App\Models;
 use App\Models\Concerns\HasImages;
 use App\Models\Concerns\HasOrderingScopes;
 use App\Models\Concerns\HasTranslations;
+use App\Models\Concerns\TouchesSite;
 use Illuminate\Database\Eloquent\Model;
 
 /** Home hero: the first active slide gives the headline; the first three images fill the photo collage. */
 class Slide extends Model
 {
-    use HasImages, HasOrderingScopes, HasTranslations;
+    use HasImages, HasOrderingScopes, HasTranslations, TouchesSite;
 
     public const UPLOAD_DIR = 'slides';
 

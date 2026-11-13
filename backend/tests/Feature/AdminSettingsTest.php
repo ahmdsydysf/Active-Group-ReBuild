@@ -14,7 +14,7 @@ class AdminSettingsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Sanctum::actingAs(User::factory()->create(['is_active' => true]));
+        Sanctum::actingAs(User::factory()->create(['is_active' => true, 'role' => User::ROLE_ADMIN]));
     }
 
     public function test_settings_round_trip(): void
@@ -47,9 +47,18 @@ class AdminSettingsTest extends TestCase
 
         $this->getJson('/api/v1/admin/overview')
             ->assertOk()
-            ->assertJsonPath('sections.1.key', 'testimonials')
-            ->assertJsonPath('sections.1.total', 2)
-            ->assertJsonPath('sections.1.missing_en', 1)
-            ->assertJsonPath('subscribers.total', 1);
+            ->assertJsonPath('sections.7.key', 'testimonials')
+            ->assertJsonPath('sections.7.total', 2)
+            ->assertJsonPath('sections.7.missing_en', 1)
+            ->assertJsonPath('kpis.subscribers', 1);
+    }
+
+    public function test_editors_cannot_open_settings_or_users(): void
+    {
+        Sanctum::actingAs(User::factory()->create(['is_active' => true, 'role' => User::ROLE_EDITOR]));
+
+        $this->getJson('/api/v1/admin/settings')->assertForbidden();
+        $this->getJson('/api/v1/admin/users')->assertForbidden();
+        $this->getJson('/api/v1/admin/products')->assertOk();
     }
 }

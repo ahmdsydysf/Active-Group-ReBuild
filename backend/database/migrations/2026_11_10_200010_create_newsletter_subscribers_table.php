@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('locale', 2)->default('ar');
+            $table->string('source', 40)->default('site');
+            $table->timestamp('unsubscribed_at')->nullable();
             $table->timestamps();
         });
     }

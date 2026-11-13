@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // The site and dashboard (first FRONTEND_URL entry); used in password emails.
+    'frontend_url' => rtrim(explode(',', (string) env('FRONTEND_URL', 'http://localhost:3000'))[0], '/'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

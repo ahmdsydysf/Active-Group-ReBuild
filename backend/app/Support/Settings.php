@@ -38,6 +38,13 @@ final class Settings
         'instagram' => null,
         // Numbers: four counters on the home page. The third one is also the badge on the hero photos.
         'stats' => [],
+        // About page
+        'about_title_ar' => null,
+        'about_title_en' => null,
+        'about_body_ar' => null,
+        'about_body_en' => null,
+        // Milestones on the about page: [{year, title_ar, title_en, text_ar, text_en}]
+        'timeline' => [],
         // SEO
         'seo_title_ar' => null,
         'seo_title_en' => null,
@@ -78,6 +85,16 @@ final class Settings
             'instagram' => $url,
             'stats' => 'sometimes|array|max:4',
             ...$stat('stats.*'),
+            'about_title_ar' => 'nullable|string|max:120',
+            'about_title_en' => 'nullable|string|max:120',
+            'about_body_ar' => 'nullable|string|max:3000',
+            'about_body_en' => 'nullable|string|max:3000',
+            'timeline' => 'sometimes|array|max:12',
+            'timeline.*.year' => 'required|integer|min:1950|max:2100',
+            'timeline.*.title_ar' => 'required|string|max:80',
+            'timeline.*.title_en' => 'nullable|string|max:80',
+            'timeline.*.text_ar' => 'nullable|string|max:300',
+            'timeline.*.text_en' => 'nullable|string|max:300',
             'seo_title_ar' => 'nullable|string|max:70',
             'seo_title_en' => 'nullable|string|max:70',
             'seo_description_ar' => 'nullable|string|max:170',
@@ -137,6 +154,21 @@ final class Settings
             ]),
             'stats' => array_map($stat, $s['stats'] ?? []),
             'seo' => ['title' => $tr('seo_title'), 'description' => $tr('seo_description')],
+        ];
+    }
+
+    /** The about page story and milestones; paragraphs are split on blank lines. */
+    public static function about(string $locale): array
+    {
+        $s = self::all();
+        $other = $locale === 'ar' ? 'en' : 'ar';
+        $tr = fn (array $row, string $key) => ($row["{$key}_{$locale}"] ?? null) ?: ($row["{$key}_{$other}"] ?? null);
+        $body = (string) $tr($s, 'about_body');
+
+        return [
+            'title' => $tr($s, 'about_title'),
+            'paragraphs' => array_values(array_filter(array_map('trim', preg_split('/\R{2,}/u', $body) ?: []))),
+            'timeline' => array_map(fn (array $t) => ['year' => (int) $t['year'], 'title' => $tr($t, 'title'), 'text' => $tr($t, 'text')], $s['timeline'] ?? []),
         ];
     }
 }
