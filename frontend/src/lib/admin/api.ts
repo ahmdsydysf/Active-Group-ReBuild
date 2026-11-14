@@ -49,12 +49,20 @@ export async function api<T = unknown>(path: string, method = "GET", body?: Body
   let res: Response;
   try {
     res = await fetch(BASE + path, { method, headers, body: body instanceof FormData ? body : body && JSON.stringify(body) });
-  } catch {
-    throw new ApiError(0, "مش قادرين نوصل للسيرفر. اتأكد من الإنترنت وجرب تاني.");
+  } catch (e) {
+    console.error(`[admin api] ${method} ${BASE + path} failed`, e);
+    throw new ApiError(0, `مش قادرين نوصل للسيرفر (${BASE}). اتأكد إن الـ API شغال وجرب تاني.`);
   }
 
   if (res.status === 204) return undefined as T;
-  const json = await res.json().catch(() => ({}));
+  const isJson = (res.headers.get("content-type") ?? "").includes("json");
+  const json = isJson ? await res.json().catch(() => ({})) : {};
+  // A non-JSON error means the request reached something other than the Laravel API,
+  // usually because NEXT_PUBLIC_API_URL is missing or wrong in the frontend env file.
+  if (!res.ok && !isJson) {
+    console.error(`[admin api] ${method} ${res.url} answered ${res.status} without JSON`);
+    throw new ApiError(res.status, `الطلب راح لعنوان غلط (${res.url}، رد ${res.status}). راجع NEXT_PUBLIC_API_URL في frontend/.env.local وشغّل npm run dev تاني.`);
+  }
 
   if (res.status === 401 && path !== "/login") {
     session.clear();
