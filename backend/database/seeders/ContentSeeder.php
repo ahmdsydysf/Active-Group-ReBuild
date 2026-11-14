@@ -41,7 +41,7 @@ class ContentSeeder extends Seeder
         $this->inbox();
     }
 
-    private function image(string $file, string $dir): string
+    protected function image(string $file, string $dir): string
     {
         $source = __DIR__.'/images/'.$file;
 
@@ -184,7 +184,7 @@ class ContentSeeder extends Seeder
         ]);
     }
 
-    private function services(): void
+    protected function services(): void
     {
         $rows = [
             ['lab', 'تحليل التربة والمياه', 'Soil and water testing', 'نحلل عينة من أرضك ومياه الري، ونطلع لك تقرير بالعناصر الناقصة والملوحة ودرجة الحموضة.', 'We test a sample of your soil and irrigation water and report missing nutrients, salinity and pH.', 'lab.jpg'],
@@ -221,6 +221,12 @@ class ContentSeeder extends Seeder
     }
 
     private function posts(): void
+    {
+        $this->samplePosts(['advice', 'blog']);
+    }
+
+    /** Sample advice and blog posts for the given sections, with their categories. */
+    protected function samplePosts(array $sections): void
     {
         $category = fn (string $section, string $slug, string $ar, string $en, int $i) => PostCategory::query()->create(['section' => $section, 'slug' => $slug, 'name_ar' => $ar, 'name_en' => $en, 'sort_order' => $i]);
         $advice = [
@@ -278,6 +284,9 @@ HTML;
         ];
 
         foreach ($rows as [$section, $cat, $tAr, $tEn, $eAr, $eEn, $img, $days, $bAr, $bEn]) {
+            if (! in_array($section, $sections, true)) {
+                continue;
+            }
             Post::query()->create([
                 'section' => $section, 'post_category_id' => $cat->id, 'author_id' => $author,
                 'title_ar' => $tAr, 'title_en' => $tEn, 'excerpt_ar' => $eAr, 'excerpt_en' => $eEn,
@@ -302,7 +311,7 @@ HTML;
         }
     }
 
-    private function gallery(): void
+    protected function gallery(): void
     {
         $album = fn (string $slug, string $ar, string $en, int $i) => GalleryAlbum::query()->create(['slug' => $slug, 'name_ar' => $ar, 'name_en' => $en, 'sort_order' => $i]);
         $a = [

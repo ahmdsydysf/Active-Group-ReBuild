@@ -3,6 +3,7 @@ import VoicesSlider from "@/components/site/VoicesSlider";
 import { FactoryIcon, topicIcons } from "@/components/site/icons";
 import { getAbout, getSite } from "@/lib/api";
 import { formatNumber } from "@/lib/format";
+import { initial } from "@/lib/voices";
 import { href, messages } from "@/lib/i18n";
 import { home, pageLocale, pageMeta } from "@/lib/page";
 
@@ -160,9 +161,11 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/about">
               {about.team.map((p, i) => (
                 <div key={p.id} className="tcard" style={{ "--c": TEAM[i % TEAM.length] } as React.CSSProperties}>
                   <div className="ph">
-                    {p.photo && (
+                    {p.photo ? (
                       // eslint-disable-next-line @next/next/no-img-element -- static export serves files as they are
                       <img src={p.photo} alt={p.name} loading="lazy" decoding="async" />
+                    ) : (
+                      <span className="ini" aria-hidden="true">{initial(p.name)}</span>
                     )}
                   </div>
                   <b>{p.name}</b>

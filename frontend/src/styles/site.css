@@ -290,6 +290,7 @@
 .tcard { text-align: center; }
 .tcard .ph { aspect-ratio: 1; border-radius: 50% 50% 28px 28px; overflow: hidden; background: var(--c, var(--sage)); margin-bottom: 14px; }
 .tcard .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.tcard .ph .ini { display: grid; place-items: center; height: 100%; font-family: var(--display); font-size: clamp(48px, 9vw, 88px); color: var(--deep); opacity: .55; }
 .tcard:hover .ph img { transform: scale(1.06); }
 .tcard b { font-family: var(--display); font-size: 19px; display: block; color: var(--deep); }
 .tcard small { color: var(--soil-2); font-size: 14.5px; }

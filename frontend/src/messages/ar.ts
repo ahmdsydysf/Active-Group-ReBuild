@@ -203,7 +203,7 @@ const ar = {
     products: "منتجاتنا",
     photoAlt: "مهندس زراعي في الحقل",
     whyTitle: "ليه تختار أكتيف؟",
-    whyLead: "أربع حاجات بنلتزم بيها مع كل عميل.",
+    whyLead: "اللي بنلتزم بيه مع كل عميل.",
     journey: "رحلتنا",
     journeyTitle: "من موزع صغير لشركة في 22 محافظة",
     factoriesTitle: "مصانعنا",

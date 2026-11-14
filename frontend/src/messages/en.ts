@@ -205,7 +205,7 @@ const en: Messages = {
     products: "Our products",
     photoAlt: "An agronomist in the field",
     whyTitle: "Why choose Active?",
-    whyLead: "Four promises we keep with every customer.",
+    whyLead: "What we promise every customer.",
     journey: "Our journey",
     journeyTitle: "From a small distributor to a company in 22 governorates",
     factoriesTitle: "Our plants",

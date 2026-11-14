@@ -98,12 +98,12 @@ The site is static HTML, so a change made in the dashboard shows only after a re
    ```bash
    cd ~/active-api
    php artisan key:generate --force
-   php artisan db:seed --class=SettingsSeeder --force
+   php artisan db:seed --class=LegacySeeder --force
    php artisan admin:create you@example.com
    php artisan optimize
    ```
 
-   Run the Deploy workflow again so the site is built with the settings in place.
+   `LegacySeeder` loads the content worth keeping from the old site (`backend/database/seeders/legacy.json`) with the new version's images, and sample content for the sections the old site only had placeholder text for. Run it once, on the empty database. Then run the Deploy workflow again so the site is built with that content.
 9. Cron Jobs: add `* * * * * cd ~/active-api && php artisan schedule:run >> /dev/null 2>&1`. It publishes scheduled posts and clears expired tokens. No queue worker is needed.
 10. For the publish button: create a fine-grained GitHub token for this repository only, with "Actions: read and write", put it in `PUBLISH_GITHUB_TOKEN` in the server `.env`, and run `php artisan optimize` again.
 
