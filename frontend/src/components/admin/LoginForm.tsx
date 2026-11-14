@@ -10,6 +10,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (session.token()) router.replace("/admin/");
@@ -40,7 +41,11 @@ export default function LoginForm() {
       </label>
       <label className="sfield">
         <span>كلمة المرور</span>
-        <input name="password" type="password" required autoComplete="current-password" dir="ltr" maxLength={200} aria-invalid={!!error || undefined} />
+        <input name="password" type={show ? "text" : "password"} required autoComplete="current-password" dir="ltr" maxLength={200} aria-invalid={!!error || undefined} />
+      </label>
+      <label className="flex items-center gap-2 text-sm -mt-2 text-soil-2">
+        <input type="checkbox" className="w-4 h-4 accent-field" checked={show} onChange={(e) => setShow(e.target.checked)} />
+        إظهار كلمة المرور
       </label>
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <label className="flex items-center gap-2 text-[15px]">
