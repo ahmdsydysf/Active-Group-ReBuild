@@ -1,17 +1,13 @@
-# Builds the static site from the live API and uploads it to the hosting over FTP.
+# Builds the static site from the live API and uploads it to the hosting over SSH.
 # Runs when the dashboard's "نشر التعديلات" button calls it (workflow_dispatch),
-# when frontend code changes on main, and every day at 03:00 Cairo time so scheduled posts appear.
-#
-# Repository settings needed (Settings > Secrets and variables > Actions):
-#   variables: API_URL (e.g. https://api.activegroup-eg.com), SITE_URL (e.g. https://activegroup-eg.com)
-#   secrets:   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, and optionally FTP_DIR (default public_html/)
+# after deploy.yml updates the API on main (workflow_call),
+# and every day at 03:00 Cairo time so scheduled posts appear.
+# Uses the same secrets and variables as deploy.yml.
 name: Publish site
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths: [frontend/**, .github/workflows/publish.yml]
+  workflow_call:
   schedule:
     - cron: "0 1 * * *"
 
@@ -49,16 +45,29 @@ jobs:
           NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
           NEXT_TELEMETRY_DISABLED: 1
 
-      - name: Upload over FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: frontend/out/
-          server-dir: ${{ secrets.FTP_DIR || 'public_html/' }}
-          # Only changed files are sent; the sync state file keeps track between runs.
-          exclude: |
-            **/.git*
-            **/.git*/**
+      - name: Set up SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_PORT: ${{ vars.SSH_PORT || '21098' }}
+        run: |
+          if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ] || [ -z "$SSH_KEY" ]; then
+            echo "::error::Add the SSH_HOST, SSH_USER and SSH_KEY secrets first (see README, Deploying)."
+            exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          printf 'Host server\n  HostName %s\n  User %s\n  Port %s\n  IdentityFile ~/.ssh/deploy\n' \
+            "$SSH_HOST" "$SSH_USER" "$SSH_PORT" > ~/.ssh/config
+
+      # --delete removes pages that no longer exist. cPanel's own folders are left alone.
+      - name: Upload site
+        env:
+          SITE_DIR: ${{ vars.SITE_DIR || 'public_html' }}
+        run: |
+          rsync -az --delete \
+            --exclude=/.well-known/ --exclude=/cgi-bin/ --exclude=/.user.ini --exclude=/error_log \
+            out/ "server:$SITE_DIR/"

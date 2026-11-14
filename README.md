@@ -40,25 +40,72 @@ npm run dev                  # http://localhost:3000
 
 The dashboard is at `/admin/`. The public site is static: `npm run build` fetches every page from the API and writes plain HTML to `out/`, so the API must be running during the build.
 
-## Publishing
+## Deploying
 
-The site is static HTML, so a change made in the dashboard shows on the site only after a rebuild. When there are unpublished changes, the dashboard shows a "نشر التعديلات" button in the top bar. Pressing it starts `.github/workflows/publish.yml`, which builds the site from the live API and uploads `frontend/out/` to the hosting over FTPS. It takes a few minutes.
+Every push to `main` runs `.github/workflows/deploy.yml`. It uploads the API to the server over SSH, runs the migrations, then builds the static site from the live API and uploads it to `public_html/`.
 
-Setup, once:
+The site is static HTML, so a change made in the dashboard shows only after a rebuild. When there are unpublished changes, the dashboard shows a "نشر التعديلات" button. Pressing it runs `.github/workflows/publish.yml`, which rebuilds and uploads the site only. That workflow also runs every night, so posts scheduled for a future date appear on time.
 
-1. On GitHub, under Settings > Secrets and variables > Actions, add:
-   - variables `API_URL` (the backend URL, for example `https://api.activegroup-eg.com`) and `SITE_URL` (`https://activegroup-eg.com`);
-   - secrets `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, and `FTP_DIR` if the site folder isn't `public_html/`.
-2. Create a fine-grained GitHub token for this repository only, with "Actions: read and write".
-3. In the backend `.env`, set `PUBLISH_GITHUB_TOKEN` to that token and `PUBLISH_GITHUB_REPO` to `owner/repo`.
+### One-time setup on Namecheap (cPanel)
 
-The workflow also runs every night, so posts scheduled for a future date appear without anyone pressing the button.
+1. Back up the current `public_html/`. The first deploy replaces its contents.
+2. Domains: add the subdomain `api.activegroup-eg.com` with its document root set to `active-api/public`. Turn on SSL for it.
+3. MySQL Databases: create a database and a user, and give the user all privileges on it.
+4. SSH Access: Manage SSH Keys > Generate a key with no passphrase, then Authorize it. View the private key; it goes into GitHub below. SSH must be enabled for the account (Namecheap uses port 21098).
+5. File Manager: create `active-api/.env` with:
 
-## Hosting on Namecheap (cPanel)
+   ```
+   APP_NAME="Active Group"
+   APP_ENV=production
+   APP_KEY=
+   APP_DEBUG=false
+   APP_URL=https://api.activegroup-eg.com
+   APP_LOCALE=ar
+   APP_FALLBACK_LOCALE=en
+   LOG_LEVEL=error
+   DB_CONNECTION=mysql
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_DATABASE=cpaneluser_dbname
+   DB_USERNAME=cpaneluser_dbuser
+   DB_PASSWORD="database password"
+   SESSION_DRIVER=array
+   CACHE_STORE=file
+   QUEUE_CONNECTION=sync
+   FILESYSTEM_DISK=local
+   FRONTEND_URL=https://activegroup-eg.com,https://www.activegroup-eg.com
+   SANCTUM_EXPIRATION=480
+   MAIL_MAILER=smtp
+   MAIL_HOST=mail.activegroup-eg.com
+   MAIL_PORT=465
+   MAIL_SCHEME=smtps
+   MAIL_USERNAME=noreply@activegroup-eg.com
+   MAIL_PASSWORD="mailbox password"
+   MAIL_FROM_ADDRESS=noreply@activegroup-eg.com
+   MAIL_FROM_NAME="Active Group"
+   PUBLISH_GITHUB_TOKEN=
+   PUBLISH_GITHUB_REPO=ahmdsydysf/active-group-rebuild
+   PUBLISH_WORKFLOW=publish.yml
+   PUBLISH_BRANCH=main
+   ```
 
-- Backend: upload `backend/` outside `public_html`, point a subdomain such as `api.` at `backend/public`, create the MySQL database in cPanel, fill `.env` (`APP_ENV=production`, `APP_DEBUG=false`, database, mail, `FRONTEND_URL`, `SANCTUM_STATEFUL_DOMAINS`), then run `php artisan migrate --force` and `php artisan storage:link`.
-- Add one cron job: `* * * * * php /home/USER/backend/artisan schedule:run >> /dev/null 2>&1`. It publishes scheduled posts and cleans old tokens. No queue worker is needed.
-- Frontend: the publish workflow uploads the static files into `public_html/`.
+6. On GitHub, Settings > Secrets and variables > Actions:
+   - secrets `SSH_HOST` (the server name shown in cPanel, for example `server123.web-hosting.com`), `SSH_USER` (the cPanel user name) and `SSH_KEY` (the whole private key);
+   - variables `API_URL` (`https://api.activegroup-eg.com`) and `SITE_URL` (`https://activegroup-eg.com`). Add `SSH_PORT`, `API_DIR` or `SITE_DIR` only if they differ from `21098`, `active-api` and `public_html`.
+7. Run the Deploy workflow (Actions > Deploy > Run workflow), or merge into `main`. The first run uploads the code and creates the tables.
+8. cPanel Terminal, once:
+
+   ```bash
+   cd ~/active-api
+   php artisan key:generate --force
+   php artisan db:seed --class=SettingsSeeder --force
+   php artisan admin:create you@example.com
+   php artisan optimize
+   ```
+
+   Run the Deploy workflow again so the site is built with the settings in place.
+9. Cron Jobs: add `* * * * * cd ~/active-api && php artisan schedule:run >> /dev/null 2>&1`. It publishes scheduled posts and clears expired tokens. No queue worker is needed.
+10. For the publish button: create a fine-grained GitHub token for this repository only, with "Actions: read and write", put it in `PUBLISH_GITHUB_TOKEN` in the server `.env`, and run `php artisan optimize` again.
 
 ## Skills
 
