@@ -20,6 +20,7 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate --seed   # sample content from the current site
+php artisan admin:create     # asks for the admin email and password
 php artisan serve            # http://localhost:8000
 ```
 

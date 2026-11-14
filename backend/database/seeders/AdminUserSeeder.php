@@ -10,7 +10,7 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL');
+        $email = mb_strtolower(trim((string) env('ADMIN_EMAIL')));
         $password = env('ADMIN_PASSWORD');
 
         if (! $email || ! $password) {
@@ -20,7 +20,7 @@ class AdminUserSeeder extends Seeder
         }
 
         if (strlen($password) < 12) {
-            $this->command?->error('ADMIN_PASSWORD must be at least 12 characters.');
+            $this->command?->error('ADMIN_PASSWORD must be at least 12 characters. If it holds # or spaces, wrap it in double quotes, or run php artisan admin:create instead.');
 
             return;
         }

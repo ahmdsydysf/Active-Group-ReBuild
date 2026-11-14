@@ -40,7 +40,7 @@ final class AuthController extends Controller
             'password' => 'required|string|max:200',
         ]);
 
-        $user = User::query()->where('email', $data['email'])->first();
+        $user = User::query()->where('email', mb_strtolower(trim($data['email'])))->first();
 
         // Same message for a wrong email, a wrong password or a disabled account.
         if (! $user || ! $user->is_active || ! Hash::check($data['password'], $user->password)) {
