@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
-// Runs from one cPanel cron line: * * * * * php /path/to/backend/artisan schedule:run
+// Runs from one cPanel cron line every 15 minutes: */15 * * * * cd ~/active-api && /usr/local/bin/php artisan schedule:run
 Schedule::command('sanctum:prune-expired --hours=24')->daily();
 
 // Scheduled articles appear on the static site only after a rebuild, so publish when one comes due.
