@@ -3,7 +3,8 @@
 # Repository settings needed (Settings > Secrets and variables > Actions):
 #   secrets:   SSH_HOST (server name from cPanel), SSH_USER (cPanel user name), SSH_KEY (private key, see README)
 #   variables: API_URL, SITE_URL, and optionally SSH_PORT (default 21098 on Namecheap),
-#              API_DIR (default active-api) and SITE_DIR (default public_html), both relative to the home folder
+#              API_DIR (default active-api), and SITE_DIR (required: a folder used only by this site),
+#              both relative to the home folder
 name: Deploy
 
 on:

@@ -42,14 +42,14 @@ The dashboard is at `/admin/`. The public site is static: `npm run build` fetche
 
 ## Deploying
 
-Every push to `main` runs `.github/workflows/deploy.yml`. It uploads the API to the server over SSH, runs the migrations, then builds the static site from the live API and uploads it to `public_html/`.
+Every push to `main` runs `.github/workflows/deploy.yml`. It uploads the API to the server over SSH, runs the migrations, then builds the static site from the live API and uploads it to the site folder (`SITE_DIR`).
 
 The site is static HTML, so a change made in the dashboard shows only after a rebuild. When there are unpublished changes, the dashboard shows a "نشر التعديلات" button. Pressing it runs `.github/workflows/publish.yml`, which rebuilds and uploads the site only. That workflow also runs every night, so posts scheduled for a future date appear on time.
 
 ### One-time setup on Namecheap (cPanel)
 
-1. Back up the current `public_html/`. The first deploy replaces its contents.
-2. Domains: add the subdomain `api.activegroup-eg.com` with its document root set to `active-api/public`. Turn on SSL for it.
+1. Keep the API outside `public_html/`, so `.env` can never be downloaded. The site gets its own folder, because each upload deletes anything else in it. Never point `SITE_DIR` at `public_html/` itself when other sites live there.
+2. Domains: add the subdomain `api.activegroup-eg.com` with its document root set to `active-api/public`, and point the site's domain at its own folder, for example `public_html/activegroup`. Turn on SSL for both.
 3. MySQL Databases: create a database and a user, and give the user all privileges on it.
 4. SSH Access: Manage SSH Keys > Generate a key with no passphrase, then Authorize it. View the private key; it goes into GitHub below. SSH must be enabled for the account (Namecheap uses port 21098).
 5. File Manager: create `active-api/.env` with:
@@ -91,7 +91,7 @@ The site is static HTML, so a change made in the dashboard shows only after a re
 
 6. On GitHub, Settings > Secrets and variables > Actions:
    - secrets `SSH_HOST` (the server name shown in cPanel, for example `server123.web-hosting.com`), `SSH_USER` (the cPanel user name) and `SSH_KEY` (the whole private key);
-   - variables `API_URL` (`https://api.activegroup-eg.com`) and `SITE_URL` (`https://activegroup-eg.com`). Add `SSH_PORT`, `API_DIR` or `SITE_DIR` only if they differ from `21098`, `active-api` and `public_html`.
+   - variables `API_URL` (`https://api.activegroup-eg.com`), `SITE_URL` (`https://activegroup-eg.com`) and `SITE_DIR` (the site folder, for example `public_html/activegroup`). Add `SSH_PORT` or `API_DIR` only if they differ from `21098` and `active-api`.
 7. Run the Deploy workflow (Actions > Deploy > Run workflow), or merge into `main`. The first run uploads the code and creates the tables.
 8. cPanel Terminal, once:
 

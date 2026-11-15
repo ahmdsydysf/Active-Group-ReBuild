@@ -66,8 +66,12 @@ jobs:
       # --delete removes pages that no longer exist. cPanel's own folders are left alone.
       - name: Upload site
         env:
-          SITE_DIR: ${{ vars.SITE_DIR || 'public_html' }}
+          SITE_DIR: ${{ vars.SITE_DIR }}
         run: |
+          # --delete empties the folder of anything else, so it must be the site's own folder.
+          case "${SITE_DIR%/}" in
+            ""|public_html|.|~) echo "::error::Set SITE_DIR to a folder used only by this site, for example public_html/activegroup."; exit 1 ;;
+          esac
           rsync -az --delete \
             --exclude=/.well-known/ --exclude=/cgi-bin/ --exclude=/.user.ini --exclude=/error_log \
             out/ "server:$SITE_DIR/"
