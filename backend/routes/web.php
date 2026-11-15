@@ -2,6 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// API only. The site and dashboard are the Next.js app in frontend/.
+Route::get('/', fn () => response()->json(['name' => config('app.name'), 'docs' => url('/api/documentation')]));

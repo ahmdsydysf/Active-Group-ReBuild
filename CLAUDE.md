@@ -8,3 +8,4 @@
 - Target hosting is Namecheap, so keep the backend compatible with shared cPanel hosting (MySQL/MariaDB, no long-running workers required).
 - Before finishing backend work run `php artisan test`; for frontend run `npm run lint` and `npm run build`.
 - Use the project skills in `.claude/skills/` (laravel-specialist, frontend-design, ui-ux-pro-max, web-design-guidelines, find-animation-opportunities, codebase-design).
+- Run every piece of user-facing copy (site text, English translations, README and docs) through the `unslop` skill before finishing.

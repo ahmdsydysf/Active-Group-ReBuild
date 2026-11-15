@@ -1,0 +1,87 @@
+# Deploys everything when main changes: the Laravel API first, then the static site built from it.
+#
+# Repository settings needed (Settings > Secrets and variables > Actions):
+#   secrets:   SSH_HOST (server name from cPanel), SSH_USER (cPanel user name), SSH_KEY (private key, see README)
+#   variables: API_URL, SITE_URL, and optionally SSH_PORT (default 21098 on Namecheap),
+#              API_DIR (default active-api), and SITE_DIR (required: a folder used only by this site),
+#              both relative to the home folder
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PORT: ${{ vars.SSH_PORT || '21098' }}
+      API_DIR: ${{ vars.API_DIR || 'active-api' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          tools: composer:v2
+          coverage: none
+
+      - name: Install PHP packages
+        working-directory: backend
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
+
+      - name: Set up SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ] || [ -z "$SSH_KEY" ]; then
+            echo "::error::Add the SSH_HOST, SSH_USER and SSH_KEY secrets first (see README, Deploying)."
+            exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          printf 'Host server\n  HostName %s\n  User %s\n  Port %s\n  IdentityFile ~/.ssh/deploy\n' \
+            "$SSH_HOST" "$SSH_USER" "$SSH_PORT" > ~/.ssh/config
+
+      # Server-owned files are excluded, so --delete never touches them: .env, uploads and logs in storage/.
+      - name: Upload code
+        run: |
+          ssh server "mkdir -p ~/$API_DIR"
+          rsync -az --delete \
+            --exclude=.env --exclude=/storage/ --exclude=/public/storage \
+            --exclude=/tests/ --exclude='.git*' --exclude=/database/database.sqlite \
+            backend/ "server:$API_DIR/"
+
+      - name: Migrate and cache
+        run: |
+          ssh server "API_DIR=$API_DIR bash -s" <<'SH'
+          set -e
+          cd ~/"$API_DIR"
+          mkdir -p storage/app/public storage/app/private storage/logs \
+            storage/framework/cache/data storage/framework/sessions storage/framework/views bootstrap/cache
+          if [ ! -f .env ]; then
+            echo "::error::~/$API_DIR/.env is missing. Create it on the server (see README, Deploying), then run this workflow again."
+            exit 1
+          fi
+          php artisan migrate --force
+          php artisan optimize
+          [ -e public/storage ] || php artisan storage:link
+          SH
+
+  site:
+    needs: api
+    uses: ./.github/workflows/publish.yml
+    secrets: inherit

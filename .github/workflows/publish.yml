@@ -1,0 +1,77 @@
+# Builds the static site from the live API and uploads it to the hosting over SSH.
+# Runs when the dashboard's "نشر التعديلات" button calls it (workflow_dispatch),
+# after deploy.yml updates the API on main (workflow_call),
+# and every day at 03:00 Cairo time so scheduled posts appear.
+# Uses the same secrets and variables as deploy.yml.
+name: Publish site
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  schedule:
+    - cron: "0 1 * * *"
+
+# One publish at a time; a newer request replaces one still waiting.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Build static site
+        run: npm run build
+        env:
+          API_URL: ${{ vars.API_URL }}
+          NEXT_PUBLIC_API_URL: ${{ vars.API_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Set up SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_PORT: ${{ vars.SSH_PORT || '21098' }}
+        run: |
+          if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ] || [ -z "$SSH_KEY" ]; then
+            echo "::error::Add the SSH_HOST, SSH_USER and SSH_KEY secrets first (see README, Deploying)."
+            exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          printf 'Host server\n  HostName %s\n  User %s\n  Port %s\n  IdentityFile ~/.ssh/deploy\n' \
+            "$SSH_HOST" "$SSH_USER" "$SSH_PORT" > ~/.ssh/config
+
+      # --delete removes pages that no longer exist. cPanel's own folders are left alone.
+      - name: Upload site
+        env:
+          SITE_DIR: ${{ vars.SITE_DIR }}
+        run: |
+          # --delete empties the folder of anything else, so it must be the site's own folder.
+          case "${SITE_DIR%/}" in
+            ""|public_html|.|~) echo "::error::Set SITE_DIR to a folder used only by this site, for example public_html/activegroup."; exit 1 ;;
+          esac
+          rsync -az --delete \
+            --exclude=/.well-known/ --exclude=/cgi-bin/ --exclude=/.user.ini --exclude=/error_log \
+            out/ "server:$SITE_DIR/"

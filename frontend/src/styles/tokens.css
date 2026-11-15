@@ -1,0 +1,52 @@
+/* Active Group design tokens, shared by the site and the dashboard. Ported from the approved HTML design kit. */
+/* Brand tokens: usable as Tailwind utilities (bg-field, text-deep, font-display ...) */
+@theme {
+  --color-deep: #123F1C;
+  --color-field: #1F6B2E;
+  --color-leaf: #4CAF2E;
+  --color-wheat: #D08A2A;
+  --color-sun: #F2C230;
+  --color-bloom: #E0607E;
+  --color-sky: #2E8FB0;
+  --color-rust: #B4442E;
+  --color-soil: #2B2118;
+  --color-soil-2: #6A5E52;
+  --color-sage: #EEF3EA;
+  --color-line: #E1E8DC;
+}
+@theme inline {
+  --font-display: var(--display);
+  --font-body: var(--body);
+}
+
+:root {
+  --deep: #123F1C;   /* night field */
+  --field: #1F6B2E;  /* primary green */
+  --leaf: #4CAF2E;   /* fresh leaf */
+  --wheat: #D08A2A;  /* logo A / call to action */
+  --sun: #F2C230;    /* sunflower */
+  --bloom: #E0607E;  /* blossom */
+  --sky: #2E8FB0;    /* irrigation water */
+  --rust: #B4442E;   /* pesticides */
+  --soil: #2B2118;   /* text */
+  --soil-2: #6A5E52;
+  --sage: #EEF3EA;
+  --paper: #FFFFFF;
+  --line: #E1E8DC;
+  /* next/font serves both families from our own domain (see src/lib/fonts.ts) */
+  --display: var(--font-alexandria), 'Segoe UI', Tahoma, sans-serif;
+  --body: var(--font-plex-arabic), 'Segoe UI', Tahoma, sans-serif;
+  --gut-l: max(16px, env(safe-area-inset-left, 0px));
+  --gut-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: light;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body { background: var(--paper); color: var(--soil); font-family: var(--body); font-size: 17px; line-height: 1.75; overflow-x: clip; }
+  h1, h2, h3, h4 { font-family: var(--display); line-height: 1.25; text-wrap: balance; }
+  :focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; border-radius: 6px; }
+  [hidden] { display: none !important; }
+  button { cursor: pointer; }
+}
+

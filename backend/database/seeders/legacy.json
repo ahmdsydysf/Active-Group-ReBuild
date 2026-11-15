@@ -1,0 +1,393 @@
+{
+ "source": "Old site database, exported 2026-11-10",
+ "settings": {
+  "phone1": "01097003465",
+  "phone2": "01274077377",
+  "whatsapp": "201097003465",
+  "address_ar": "المنطقة الحرة، مدينة نصر، القاهرة",
+  "address_en": "Free Zone, Nasr City, Cairo",
+  "about_title_ar": "الموزع الأول لتجارة الأسمدة والمبيدات",
+  "about_title_en": "A leading distributor of fertilizers and pesticides",
+  "about_body_ar": "تتمثل الاهداف العامة لمنظومة عملنا فيما يلى :\n\n1- توفير التغذية المتكاملة للنبات مما يعمل على رفع المناعة الخاصة بالنبات مما يوفر له الحماية من الامراض والافات المختلفة مما يساعدنا على تقليل استخدام المبيدات الزراعية مما يساعنا فى تقليل التكاليف ( نبات قوى وصحى وخالى من المواد الضارة )\n\n2- توفير الاسمدة عالية النقاوة متعددة الاغراض ( تغذية – زيادة مناعة - مشجعة على انتاج المواد المناعية داخل النبات فى تركيبات مختلفة على حسب احتياجات النبات وبما يتناسب مع مراحل نموة والظروف المحيطة بة سواء ظروف جوية او نوع تربة اوملوحة كل من التربة والمياة المستخدمة فى الرى ( نبات قوى يتماشى مع كافة ظروف الانتاج المحيطة به )",
+  "about_body_en": "Our work has two main goals:\n\n1. Complete plant nutrition that raises the plant's own resistance to disease and pests. That means less pesticide and lower costs: a strong, healthy plant free of harmful residues.\n\n2. High-purity, multi-purpose fertilizers (nutrition, resistance, and help for the plant to build its own defences) in blends that match each crop, growth stage and conditions, from weather to soil type and the salinity of soil and irrigation water."
+ },
+ "slides": [
+  {
+   "title_ar": "الطريقه المثلى لتطوير انتاج مزارعك",
+   "subtitle_ar": "اعادة تصدير الخبرات المكتسبة فى صورة منتجات زراعية مصرية صالحة للاستخدام المباشر ومتواكبة مع متطلبات الدول المختلفة سعيا وراء التكامل بين بعضنا البعض.",
+   "title_en": "The best way to grow your farm's yield",
+   "subtitle_en": "Passing on hands-on experience at every stage, from planting to harvest, so farmers get the most for the least cost."
+  },
+  {
+   "title_ar": "الطريقه المثلى لتطوير انتاج مزارعك",
+   "subtitle_ar": "توفير ونقل الخبرات المختلفة فى كافة مراحل الانتاج من بداية الزراعة وحتى الحصاد سعيا لتوطين هذة الخبرات فى مصر والاستفادة منها ( الاستخدام الامثل للمواد المتوفرة ) بما يتماشي مع مراحل النبات سعيا وراء الحصول على اعلى استفادة واقل تكلفة .",
+   "title_en": "The best way to grow your farm's yield",
+   "subtitle_en": "Exporting what we have learned as Egyptian farm products ready to use and matched to what other countries need."
+  },
+  {
+   "title_ar": "الطريقه المثلى لتطوير انتاج مزارعك",
+   "subtitle_ar": "توفير التغذية المتكاملة للنبات مما يعمل على رفع المناعة الخاصة بالنبات مما يوفر له الحماية من الامراض والافات المختلفة مما يساعدنا على تقليل استخدام المبيدات الزراعية مما يساعنا فى تقليل التكاليف ( نبات قوى وصحى وخالى من المواد الضارة )",
+   "title_en": "The best way to grow your farm's yield",
+   "subtitle_en": "Complete plant nutrition that builds the plant's own resistance to disease and pests, so less pesticide is needed and costs fall."
+  },
+  {
+   "title_ar": "الطريقه المثلى لتطوير انتاج مزارعك",
+   "subtitle_ar": "توفير الاسمدة عالية النقاوة متعددة الاغراض ( تغذية – زيادة مناعة - مشجعة على انتاج المواد المناعية داخل النبات فى تركيبات مختلفة على حسب احتياجات النبات وبما يتناسب مع مراحل نموة والظروف المحيطة بة سواء ظروف جوية او نوع تربة اوملوحة كل من التربة والمياة المستخدمة فى الرى ( نبات قوى يتماشى مع كافة ظروف الانتاج المحيطة به )",
+   "title_en": "The best way to grow your farm's yield",
+   "subtitle_en": "High-purity, multi-purpose fertilizers in blends that fit each crop, growth stage, soil, water and weather."
+  }
+ ],
+ "features": [
+  {
+   "title_ar": "اختيار الأجود من المنتجات",
+   "title_en": "Only the best products"
+  },
+  {
+   "title_ar": "فريق عمل متميز",
+   "title_en": "An outstanding team"
+  },
+  {
+   "title_ar": "تكلفة أقل وجودة عالية",
+   "title_en": "Lower cost, higher quality"
+  },
+  {
+   "title_ar": "سنوات من الخبرة",
+   "title_en": "Years of experience"
+  },
+  {
+   "title_ar": "دعم فني 24 ساعة",
+   "title_en": "24-hour technical support"
+  }
+ ],
+ "factories": [
+  {
+   "name_ar": "مصنع العاشر من رمضان",
+   "name_en": "10th of Ramadan plant"
+  },
+  {
+   "name_ar": "مصنع العبور",
+   "name_en": "Obour plant"
+  },
+  {
+   "name_ar": "مصنع حلوان",
+   "name_en": "Helwan plant"
+  }
+ ],
+ "catalog": [
+  {
+   "slug": "pesticides",
+   "name_ar": "المبيدات",
+   "name_en": "Pesticides",
+   "color": "rust",
+   "types": [
+    {
+     "name_ar": "مبيدات فطرية",
+     "name_en": "Fungicides",
+     "products": [
+      {
+       "name_ar": "مبيد فطري 1",
+       "name_en": "Fungicide 1",
+       "factory": 0
+      },
+      {
+       "name_ar": "مبيد فطري 2",
+       "name_en": "Fungicide 2",
+       "factory": 0
+      },
+      {
+       "name_ar": "مبيد فطري 3",
+       "name_en": "Fungicide 3",
+       "factory": 2
+      },
+      {
+       "name_ar": "مبيد فطري 4",
+       "name_en": "Fungicide 4",
+       "factory": 1
+      },
+      {
+       "name_ar": "مبيد فطري 5",
+       "name_en": "Fungicide 5",
+       "factory": 1
+      },
+      {
+       "name_ar": "مبيد فطري 6",
+       "name_en": "Fungicide 6",
+       "factory": 2
+      },
+      {
+       "name_ar": "مبيد فطري 7",
+       "name_en": "Fungicide 7",
+       "factory": 1
+      }
+     ]
+    },
+    {
+     "name_ar": "مبيدات حشرية",
+     "name_en": "Insecticides",
+     "products": [
+      {
+       "name_ar": "مبيد حشري 1",
+       "name_en": "Insecticide 1",
+       "factory": 1
+      },
+      {
+       "name_ar": "مبيد حشري 2",
+       "name_en": "Insecticide 2",
+       "factory": 1
+      },
+      {
+       "name_ar": "مبيد حشري 3",
+       "name_en": "Insecticide 3",
+       "factory": 2
+      },
+      {
+       "name_ar": "مبيد حشري 4",
+       "name_en": "Insecticide 4",
+       "factory": 2
+      },
+      {
+       "name_ar": "مبيد حشري 5",
+       "name_en": "Insecticide 5",
+       "factory": 1
+      }
+     ]
+    },
+    {
+     "name_ar": "مبيدات نيماتودية",
+     "name_en": "Nematicides",
+     "products": [
+      {
+       "name_ar": "مبيد نيماتودي 1",
+       "name_en": "Nematicide 1",
+       "factory": 0
+      },
+      {
+       "name_ar": "مبيد نيماتودي 2",
+       "name_en": "Nematicide 2",
+       "factory": 0
+      },
+      {
+       "name_ar": "مبيد نيماتودي 3",
+       "name_en": "Nematicide 3",
+       "factory": 1
+      },
+      {
+       "name_ar": "مبيد نيماتودي 4",
+       "name_en": "Nematicide 4",
+       "factory": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "fertilizers",
+   "name_ar": "الأسمدة",
+   "name_en": "Fertilizers",
+   "color": "field",
+   "types": [
+    {
+     "name_ar": "عناصر كبرى",
+     "name_en": "Macronutrients",
+     "products": [
+      {
+       "name_ar": "سماد عناصر كبرى 1",
+       "name_en": "Macronutrient fertilizer 1",
+       "factory": 0
+      },
+      {
+       "name_ar": "سماد عناصر كبرى 2",
+       "name_en": "Macronutrient fertilizer 2",
+       "factory": 1
+      },
+      {
+       "name_ar": "سماد عناصر كبرى 3",
+       "name_en": "Macronutrient fertilizer 3",
+       "factory": 1
+      },
+      {
+       "name_ar": "سماد عناصر كبرى 4",
+       "name_en": "Macronutrient fertilizer 4",
+       "factory": 1
+      }
+     ]
+    },
+    {
+     "name_ar": "عناصر صغرى",
+     "name_en": "Micronutrients",
+     "products": [
+      {
+       "name_ar": "سماد عناصر صغرى 1",
+       "name_en": "Micronutrient fertilizer 1",
+       "factory": 0
+      },
+      {
+       "name_ar": "سماد عناصر صغرى 2",
+       "name_en": "Micronutrient fertilizer 2",
+       "factory": 2
+      }
+     ]
+    },
+    {
+     "name_ar": "أسمدة متخصصة",
+     "name_en": "Specialty fertilizers",
+     "products": [
+      {
+       "name_ar": "سماد متخصص 1",
+       "name_en": "Specialty fertilizer 1",
+       "factory": 0
+      },
+      {
+       "name_ar": "سماد متخصص 2",
+       "name_en": "Specialty fertilizer 2",
+       "factory": 2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "growth-regulators",
+   "name_ar": "منظمات النمو",
+   "name_en": "Growth regulators",
+   "color": "wheat",
+   "types": [
+    {
+     "name_ar": "منظمات نمو",
+     "name_en": "Growth regulators",
+     "products": [
+      {
+       "name_ar": "منظم نمو 1",
+       "name_en": "Growth regulator 1",
+       "factory": 1
+      },
+      {
+       "name_ar": "منظم نمو 2",
+       "name_en": "Growth regulator 2",
+       "factory": 0
+      },
+      {
+       "name_ar": "منظم نمو 3",
+       "name_en": "Growth regulator 3",
+       "factory": 1
+      },
+      {
+       "name_ar": "منظم نمو 4",
+       "name_en": "Growth regulator 4",
+       "factory": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "team": [
+  {
+   "name_ar": "أسامة طارق",
+   "name_en": "Osama Tarek",
+   "role_ar": "عضو مجلس إدارة",
+   "role_en": "Board member"
+  },
+  {
+   "name_ar": "مصطفى ممدوح",
+   "name_en": "Mostafa Mamdouh",
+   "role_ar": "نائب مدير الشركة",
+   "role_en": "Deputy general manager"
+  },
+  {
+   "name_ar": "محمد السيد",
+   "name_en": "Mohamed El Sayed",
+   "role_ar": "مدير الشركة",
+   "role_en": "General manager"
+  },
+  {
+   "name_ar": "نجوى مصطفى",
+   "name_en": "Nagwa Mostafa",
+   "role_ar": "عضو مجلس إدارة",
+   "role_en": "Board member"
+  }
+ ],
+ "testimonials": [
+  {
+   "name_ar": "المهندس / فاروق العدلى",
+   "role_ar": "مدير جمعية زراعية",
+   "quote_ar": "مش أول مرة أتعامل معاكم - شركة محترمة - ماشاء الله وبالتوفيق دائماً",
+   "name_en": "Eng. Farouk El Adly",
+   "role_en": "Head of a farming co-op",
+   "quote_en": "Not the first time I deal with you. A respectable company, all the best always."
+  },
+  {
+   "name_ar": "عمرو جمال",
+   "role_ar": "شركة استيراد وتصدير",
+   "quote_ar": "الشركة محترمة جدا قمة الزووق وقمة الاحترام ف التعامل \r\nشكرا يا باشمهندس تامر على المجهود المبذول",
+   "name_en": "Amr Gamal",
+   "role_en": "Import and export company",
+   "quote_en": "A very respectable company, with great taste and great manners. Thank you, Eng. Tamer, for all the effort."
+  },
+  {
+   "name_ar": "الحاج / عمر أحمد",
+   "role_ar": "صاحب مزارع خضروات",
+   "quote_ar": "وشكر خاص لل م. تامر الإنسان المحترم إللى بجد اتشرفت بمعرفته🌷\r\nوفعلا توجيهاته وفرت عليه وقت كتير",
+   "name_en": "Hajj Omar Ahmed",
+   "role_en": "Vegetable farm owner",
+   "quote_en": "Special thanks to Eng. Tamer, a truly respectable man I was honoured to meet. His advice saved me a lot of time."
+  }
+ ],
+ "partners": [
+  {
+   "name_ar": "Egypt Atanor",
+   "name_en": "Egypt Atanor",
+   "description_ar": "شريك ناجح متخصص في المبيدات الزراعية",
+   "description_en": "A trusted partner specialised in agricultural pesticides.",
+   "logo": "egypt-atanor.svg"
+  },
+  {
+   "name_ar": "Tervalis",
+   "name_en": "Tervalis",
+   "description_ar": "شريك ناجح متخصص في المبيدات الزراعية",
+   "description_en": "A trusted partner specialised in agricultural pesticides.",
+   "logo": "tervalis.svg"
+  },
+  {
+   "name_ar": "Genrong",
+   "name_en": "Genrong",
+   "description_ar": "شريك ناجح متخصص في المبيدات الزراعية",
+   "description_en": "A trusted partner specialised in agricultural pesticides.",
+   "logo": "genrong.svg"
+  },
+  {
+   "name_ar": "Nile Green",
+   "name_en": "Nile Green",
+   "description_ar": "شريك ناجح متخصص في المبيدات الزراعية",
+   "description_en": "A trusted partner specialised in agricultural pesticides.",
+   "logo": "nile-green.svg"
+  },
+  {
+   "name_ar": "الناصر",
+   "name_en": "Al Nasser",
+   "description_ar": "شريك ناجح متخصص في المبيدات الزراعية",
+   "description_en": "A trusted partner specialised in agricultural pesticides.",
+   "logo": "alnasser.svg"
+  }
+ ],
+ "blog": [
+  {
+   "title_ar": "نصائح تنسيق الحدائق في التصميم الداخلي",
+   "body_ar": "<ul><li>الحديقة الأندلسية: حيث تبرز الشخصيات العربية الإسلامية، وعادة ما تتميز بجدران مصنوعة من أشجار متسلقة طويلة ومزهرة، وتزين ممراتها وجدرانها بالفسيفساء والرسومات، وكذلك النوافير والمسابح الغرسات والزهور الجريئة.</li><li>الحديقة الإنجليزية: وتتميز بوجود العديد من الأشجار المتناثرة والمسطحات المائية، حيث تتكون من ممرات ضيقة ومستقيمة بها الكثير من الورود التي تنمو عند أطرافها، وتشتهر بساطة تصميمها ومحتواها، كما أنها غنية بالنباتات المتسلقة.</li><li>الحديقة اليابانية: وتتميز بعدد كبير ومتنوع من النباتات، بالإضافة إلى المناظر الطبيعية المتنوعة مثل التلال والوديان والمستنقعات والشلالات، والعديد من الجسور الخشبية فوق المسطحات المائية، بالإضافة إلى مواقع المظلات والعديد من الشجيرات الصغيرة والورود الطبيعية ذات الألوان الجذابة.</li><li>الحديقة الفرنسية: وتتميز بالزخرفة المعمارية وتحتوي على العديد من البرك ذات التصميم والشكل الهندسي، وتضم أشجارًا مزروعة بانتظام بأنواع مختلفة.</li></ul>",
+   "published_at": "2022-04-28 00:00:00",
+   "title_en": "Garden layout tips for interior design"
+  },
+  {
+   "title_ar": "الإنارة والاكسسوارات في تصميم الحدائق",
+   "body_ar": "<p>يعد تصميم الحدائق جزءًا مهمًا من تصميم المنزل الذي لا يتطلب الكثير من المال لتصميمه ويمكن القيام به بأقل قدر من الموارد، على سبيل المثال يمكنك وضع بعض قطع الخشب التي تبدو جميلة بشكل جذاب ويمكنك استخدام نباتات مثبتة على الحائط بأشكال مختلفة أو مواد زخرفية تستخدم بشكل جميل.</p><p>والعديد من الأفكار المبتكرة الأخرى التي يجب توفيرها إضاءة مناسبة وجيدة لإبراز جمالها خاصة خلال ساعات المساء حيث أن الإضاءة من العناصر. الشيء المهم الذي يجب الاهتمام به، بالنظر إلى إمكانية اختيار أشكال مختلفة من الإضاءة للمساعدة في عملية التصميم، وتجدر الإشارة إلى أن الحديقة في المنزل عبارة عن مساحة شخصية يمكن تنسيقها من قبل الناس.</p>",
+   "published_at": "2022-04-28 00:00:00",
+   "title_en": "Lighting and accessories in garden design"
+  },
+  {
+   "title_ar": "نصائح تصميم حدائق المنازل بأفكار مبتكرة",
+   "body_ar": "<p>عند تصميم الحدائق للمنازل بشكل من المهم مراعاة موقع الحديقة وطبيعة الحديقة والغرض منها، حيث يفضل البعض تصميم الحديقة للجلسات العائلية، ويفضل البعض زرع النباتات، والبعض الآخر تصميم الحفلات. في بعض الأحيان، يمكن تنظيم حفلات الشواء والتخييم من الدرجة الأولى، ويمكن للبعض تصميم حديقة، خاصة مع المساحات الكبيرة، في قطاعات مختلفة لتناسب أفراد الأسرة. تشمل أفكار تصميم الحدائق ما يلي:</p><ul><li>اختيار مدخل الحديقة: يعتبر المدخل من أهم العناصر، حيث أنه أول ما يراه الناس عند دخولهم المنزل، وبالتالي يجب اختيار طريقة التنسيق بشكل كبير، مع إضافة بعض المصابيح ذات الأشكال المختلفة التي تتناسب مع طبيعة نظام البناء. يمكن أيضًا زراعة بعض النباتات والزهور على جوانبها.</li><li>اختيار أرضية الحديقة: إذا كان تصميم غطاء الأرضية من أهم الأسس التي يجب العناية بها، وهناك 3 أنواع من طرق تصميم أرضية الحديقة المعروفة وهي: العشب الطبيعي أو الاصطناعي أو الحصى أو أي نوع من البلاط ويتم اختيار نوع الأرضية حسب الاستخدام والتطبيق.</li><li>اختيار كراسي الحديقة: تعتبر الكراسي المستخدمة في تصميم الحدائق أيضًا أساسًا مهمًا، حيث يفضل بعض الأشخاص الجلوس في الحديقة لفترة أطول من الوقت، خاصة في فصلي الربيع والصيف، وبالتالي يجب اختيار نوعية الكراسي المناسبة. حسب تصميم الحديقة حسب مناخ المنطقة، بحيث لا تتضرر بفعل الحرارة أو الرطوبة، بحيث تكون أنواع الكراسي المستخدمة سابقاً مصنوعة من القش أو المعدن، ويفضل التخلي عن فكرة وضع الكراسي البلاستيكية.</li><li>اختيار ديكورات الحديقة: حيث توجد مجموعة متنوعة من الزخارف التي يمكن وضعها في الحديقة سواء على الأرضيات أو بين الغرسات أو حتى المعلقة، حيث يمكن وضع بعض التماثيل والأعمدة الرخامية والتماثيل الصخرية للحيوانات الأليفة، وهناك الكثير أنواع الزخارف الخشبية الموجودة بالأسواق والتي يمكن استخدامها في الحدائق.</li></ul>",
+   "published_at": "2022-04-28 00:00:00",
+   "title_en": "Ideas for designing a home garden"
+  }
+ ]
+}
